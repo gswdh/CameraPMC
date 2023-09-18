@@ -48,6 +48,7 @@ Src/usart.c \
 Src/stm32l4xx_it.c \
 Src/stm32l4xx_hal_msp.c \
 Src/stm32l4xx_hal_timebase_tim.c \
+Src/system_stm32l4xx.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_adc.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_adc_ex.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c \
@@ -70,7 +71,6 @@ Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.c \
-Src/system_stm32l4xx.c \
 Middlewares/Third_Party/FreeRTOS/Source/croutine.c \
 Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
 Middlewares/Third_Party/FreeRTOS/Source/list.c \
@@ -80,7 +80,9 @@ Middlewares/Third_Party/FreeRTOS/Source/tasks.c \
 Middlewares/Third_Party/FreeRTOS/Source/timers.c \
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
-Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c  
+Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
+\
+abstraction/powermgt.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -145,7 +147,8 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 -IDrivers/CMSIS/Device/ST/STM32L4xx/Include \
--IDrivers/CMSIS/Include
+-IDrivers/CMSIS/Include \
+-Iabstraction
 
 
 # compile gcc flags

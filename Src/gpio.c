@@ -69,7 +69,7 @@ void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PAPin PAPin */
-  GPIO_InitStruct.Pin = BMS_NPRESENT_Pin|BMS_NINT_Pin;
+  GPIO_InitStruct.Pin = BMS_NPRESENT_Pin|BMS_NINT_Pin|SYS_WAKE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);

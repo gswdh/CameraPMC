@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "powermgt.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,6 +49,7 @@
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
+osThreadId_t blink_task_handle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
   .stack_size = 128 * 4,
@@ -61,6 +62,7 @@ const osThreadAttr_t defaultTask_attributes = {
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
+void blink_task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -93,6 +95,7 @@ void MX_FREERTOS_Init(void) {
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  blink_task_handle = osThreadNew(blink_task, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -113,13 +116,46 @@ void MX_FREERTOS_Init(void) {
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
+  while(HAL_GPIO_ReadPin(SYS_WAKE_GPIO_Port, SYS_WAKE_Pin))
+  {
+    osDelay(1);
+  }
+
+  pwr_sys_on();
+
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
   for(;;)
   {
     osDelay(1);
+
+    uint32_t tick = osKernelSysTick();
+
+    while(HAL_GPIO_ReadPin(SYS_WAKE_GPIO_Port, SYS_WAKE_Pin))
+    {
+      if(osKernelSysTick() > (tick + 1000))
+      {
+        while(HAL_GPIO_ReadPin(SYS_WAKE_GPIO_Port, SYS_WAKE_Pin))
+        {
+          osDelay(100);
+        }
+
+        pwr_sys_off();
+
+        pwr_sleep();       
+      }
+    }
   }
   /* USER CODE END StartDefaultTask */
+}
+
+void blink_task(void *argument)
+{
+  while(1)
+  {
+    HAL_GPIO_TogglePin(PMC_LED_RUN_GPIO_Port, PMC_LED_RUN_Pin);
+    osDelay(50);
+  }
 }
 
 /* Private application code --------------------------------------------------*/
