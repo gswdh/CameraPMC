@@ -76,6 +76,8 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
   log_start();
   log_info("Starting system.");
+
+  pwr_start();
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */

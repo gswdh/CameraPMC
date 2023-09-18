@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "stdbool.h": "c",
-        "usart.h": "c"
+        "usart.h": "c",
+        "stusb4500.h": "c",
+        "logging.h": "c"
     }
 }

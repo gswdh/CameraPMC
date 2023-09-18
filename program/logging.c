@@ -21,7 +21,7 @@ static void print_callback(log_Event *ev)
         ev->udata, "%lu %s: %s\n",
         osKernelSysTick(), level_strings[ev->level], params);
 
-    HAL_UART_Transmit_DMA(&huart1, log_buffer, strlen((char*)log_buffer));
+    HAL_UART_Transmit(&huart1, log_buffer, strlen((char*)log_buffer), 100);
 }
 
 void log_start()

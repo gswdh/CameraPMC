@@ -59,7 +59,7 @@ void pwr_sleep()
 
 void pwr_start()
 {
-
+	usbpd_start();
 }
 
 void pwr_task(void * params)
