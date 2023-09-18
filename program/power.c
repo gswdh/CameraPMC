@@ -1,7 +1,8 @@
-#include "powermgt.h"
+#include "power.h"
 
 #include "gpio.h"
 #include "cmsis_os.h"
+#include "usbpd.h"
 
 void pwr_sys_on()
 {
@@ -54,4 +55,14 @@ void pwr_sleep()
 
 	// Simply enter the standby mode!
 	HAL_PWR_EnterSTANDBYMode();
+}
+
+void pwr_start()
+{
+
+}
+
+void pwr_task(void * params)
+{
+
 }

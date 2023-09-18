@@ -25,7 +25,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "powermgt.h"
+#include "power.h"
+#include "logging.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -73,7 +74,8 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-
+  log_start();
+  log_info("Starting system.");
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -135,6 +137,8 @@ void StartDefaultTask(void *argument)
     {
       if(osKernelSysTick() > (tick + 1000))
       {
+        log_info("Button (thumb) held for more than one second, turning system off.");
+
         while(HAL_GPIO_ReadPin(SYS_WAKE_GPIO_Port, SYS_WAKE_Pin))
         {
           osDelay(100);

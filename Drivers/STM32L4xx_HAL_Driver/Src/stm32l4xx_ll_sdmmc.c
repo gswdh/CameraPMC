@@ -324,7 +324,7 @@ HAL_StatusTypeDef SDMMC_PowerState_ON(SDMMC_TypeDef *SDMMCx)
 
   /* 1ms: required power up waiting time before starting the SD initialization
   sequence */
-  HAL_Delay(2);
+  stusb_delay_ms(2);
 
   return HAL_OK;
 }

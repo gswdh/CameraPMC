@@ -709,7 +709,7 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef *hopamp)
         /* OFFTRIMmax delay 1 ms as per datasheet (electrical characteristics */
         /* Offset trim time: during calibration, minimum time needed between */
         /* two steps to have 1 mV accuracy */
-        HAL_Delay(OPAMP_TRIMMING_DELAY);
+        stusb_delay_ms(OPAMP_TRIMMING_DELAY);
 
         if (READ_BIT(hopamp->Instance->CSR, OPAMP_CSR_CALOUT) != 0U)
         {
@@ -733,7 +733,7 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef *hopamp)
       /* OFFTRIMmax delay 1 ms as per datasheet (electrical characteristics */
       /* Offset trim time: during calibration, minimum time needed between */
       /* two steps to have 1 mV accuracy */
-      HAL_Delay(OPAMP_TRIMMING_DELAY);
+      stusb_delay_ms(OPAMP_TRIMMING_DELAY);
 
       if ((READ_BIT(hopamp->Instance->CSR, OPAMP_CSR_CALOUT)) == 0U)
       {
@@ -760,7 +760,7 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef *hopamp)
         /* OFFTRIMmax delay 1 ms as per datasheet (electrical characteristics */
         /* Offset trim time: during calibration, minimum time needed between */
         /* two steps to have 1 mV accuracy */
-        HAL_Delay(OPAMP_TRIMMING_DELAY);
+        stusb_delay_ms(OPAMP_TRIMMING_DELAY);
 
         if (READ_BIT(hopamp->Instance->CSR, OPAMP_CSR_CALOUT) != 0U)
         {
@@ -785,7 +785,7 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef *hopamp)
       /* OFFTRIMmax delay 1 ms as per datasheet (electrical characteristics */
       /* Offset trim time: during calibration, minimum time needed between */
       /* two steps to have 1 mV accuracy */
-      HAL_Delay(OPAMP_TRIMMING_DELAY);
+      stusb_delay_ms(OPAMP_TRIMMING_DELAY);
 
       if (READ_BIT(hopamp->Instance->CSR, OPAMP_CSR_CALOUT) != 0U)
       {

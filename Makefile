@@ -82,7 +82,14 @@ Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
 \
-program/powermgt.c
+program/power.c \
+program/usbpd.c \
+program/logging.c \
+\
+gsembedlib/stusb4500/stusb4500.c \
+\
+log/src/log.c \
+
 
 # ASM sources
 ASM_SOURCES =  \
@@ -131,7 +138,8 @@ AS_DEFS =
 # C defines
 C_DEFS =  \
 -DUSE_HAL_DRIVER \
--DSTM32L431xx
+-DSTM32L431xx \
+-DLOG_USE_COLOR
 
 
 # AS includes
@@ -148,7 +156,9 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 -IDrivers/CMSIS/Device/ST/STM32L4xx/Include \
 -IDrivers/CMSIS/Include \
--Iprogram
+-Iprogram \
+-Igsembedlib/stusb4500 \
+-Ilog/src \
 
 
 # compile gcc flags
@@ -174,7 +184,7 @@ LDSCRIPT = STM32L431RBTx_FLASH.ld
 # libraries
 LIBS = -lc -lm -lnosys 
 LIBDIR = 
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections -u printf_float
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin

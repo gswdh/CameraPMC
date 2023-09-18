@@ -83,10 +83,17 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PCPin PCPin PCPin PCPin
                            PCPin */
-  GPIO_InitStruct.Pin = PSS_PMC_FLAG_Pin|STUSB_ORI_Pin|STUSB_GPIO_Pin|STUSB_PD1_Pin
-                          |STUSB_ATTACH_Pin;
+  GPIO_InitStruct.Pin = PSS_PMC_FLAG_Pin|STUSB_ORI_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+    /*Configure GPIO pins : PCPin PCPin PCPin PCPin
+                           PCPin */
+  GPIO_InitStruct.Pin = STUSB_GPIO_Pin|STUSB_PD1_Pin
+                          |STUSB_ATTACH_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PBPin PBPin PBPin */
@@ -98,12 +105,18 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PBPin PBPin PBPin PBPin
                            PBPin PBPin PBPin */
-  GPIO_InitStruct.Pin = ACT_NCHG_Pin|ACT_NINT_Pin|FPGA_NPROG_Pin|STUSB_PD0_Pin
-                          |STUSB_NINT_Pin|FPGA_NINIT_Pin|FPGA_DONE_Pin;
+  GPIO_InitStruct.Pin = ACT_NCHG_Pin|ACT_NINT_Pin|FPGA_NPROG_Pin|FPGA_NINIT_Pin|FPGA_DONE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+    /*Configure GPIO pins : PBPin PBPin PBPin PBPin
+                           PBPin PBPin PBPin */
+  GPIO_InitStruct.Pin = STUSB_PD0_Pin
+                          |STUSB_NINT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 }
 
 /* USER CODE BEGIN 2 */

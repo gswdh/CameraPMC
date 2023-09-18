@@ -1258,7 +1258,7 @@ HAL_StatusTypeDef HAL_DAC_ConfigChannel(DAC_HandleTypeDef *hdac, DAC_ChannelConf
           return HAL_TIMEOUT;
         }
       }
-      HAL_Delay(1);
+      stusb_delay_ms(1);
       hdac->Instance->SHSR1 = sConfig->DAC_SampleAndHoldConfig.DAC_SampleTime;
     }
 #if !defined (STM32L451xx) & !defined (STM32L452xx) & !defined (STM32L462xx)
@@ -1280,7 +1280,7 @@ HAL_StatusTypeDef HAL_DAC_ConfigChannel(DAC_HandleTypeDef *hdac, DAC_ChannelConf
           return HAL_TIMEOUT;
         }
       }
-      HAL_Delay(1U);
+      stusb_delay_ms(1U);
       hdac->Instance->SHSR2 = sConfig->DAC_SampleAndHoldConfig.DAC_SampleTime;
     }
 #endif /* STM32L451xx STM32L452xx STM32L462xx */

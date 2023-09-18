@@ -380,7 +380,7 @@ HAL_StatusTypeDef HAL_DSI_Init(DSI_HandleTypeDef *hdsi, DSI_PLLInitTypeDef *PLLI
 
   /* Requires min of 400us delay before reading the PLLLS flag */
   /* 1ms delay is inserted that is the minimum HAL delay granularity */
-  HAL_Delay(1);
+  stusb_delay_ms(1);
 
   /* Get tick */
   tickstart = HAL_GetTick();
@@ -1871,7 +1871,7 @@ HAL_StatusTypeDef HAL_DSI_EnterULPMData(DSI_HandleTypeDef *hdsi)
 
   /* Requires min of 400us delay before reading the PLLLS flag */
   /* 1ms delay is inserted that is the minimum HAL delay granularity */
-  HAL_Delay(1);
+  stusb_delay_ms(1);
 
   /* Verify that D-PHY PLL is locked */
   tickstart = HAL_GetTick();
@@ -2011,7 +2011,7 @@ HAL_StatusTypeDef HAL_DSI_ExitULPMData(DSI_HandleTypeDef *hdsi)
 
   /* Requires min of 400us delay before reading the PLLLS flag */
   /* 1ms delay is inserted that is the minimum HAL delay granularity */
-  HAL_Delay(1);
+  stusb_delay_ms(1);
 
   /* Get tick */
   tickstart = HAL_GetTick();
@@ -2073,7 +2073,7 @@ HAL_StatusTypeDef HAL_DSI_ExitULPMData(DSI_HandleTypeDef *hdsi)
   }
 
   /* wait for 1 ms*/
-  HAL_Delay(1U);
+  stusb_delay_ms(1U);
 
   /* De-assert the ULPM requests and the ULPM exit bits */
   hdsi->Instance->PUCR = 0U;
@@ -2115,7 +2115,7 @@ HAL_StatusTypeDef HAL_DSI_ExitULPMData(DSI_HandleTypeDef *hdsi)
   /* Verify that D-PHY PLL is locked */
   /* Requires min of 400us delay before reading the PLLLS flag */
   /* 1ms delay is inserted that is the minimum HAL delay granularity */
-  HAL_Delay(1);
+  stusb_delay_ms(1);
 
   /* Get tick */
   tickstart = HAL_GetTick();
@@ -2189,7 +2189,7 @@ HAL_StatusTypeDef HAL_DSI_EnterULPM(DSI_HandleTypeDef *hdsi)
 
   /* Requires min of 400us delay before reading the PLLLS flag */
   /* 1ms delay is inserted that is the minimum HAL delay granularity */
-  HAL_Delay(1);
+  stusb_delay_ms(1);
 
   /* Verify that D-PHY PLL is locked */
   tickstart = HAL_GetTick();
@@ -2341,7 +2341,7 @@ HAL_StatusTypeDef HAL_DSI_ExitULPM(DSI_HandleTypeDef *hdsi)
 
   /* Requires min of 400us delay before reading the PLLLS flag */
   /* 1ms delay is inserted that is the minimum HAL delay granularity */
-  HAL_Delay(1);
+  stusb_delay_ms(1);
 
   /* Get tick */
   tickstart = HAL_GetTick();
@@ -2404,7 +2404,7 @@ HAL_StatusTypeDef HAL_DSI_ExitULPM(DSI_HandleTypeDef *hdsi)
   }
 
   /* wait for 1 ms */
-  HAL_Delay(1U);
+  stusb_delay_ms(1U);
 
   /* De-assert the ULPM requests and the ULPM exit bits */
   hdsi->Instance->PUCR = 0U;
@@ -2453,7 +2453,7 @@ HAL_StatusTypeDef HAL_DSI_ExitULPM(DSI_HandleTypeDef *hdsi)
   /* Verify that D-PHY PLL is locked */
   /* Requires min of 400us delay before reading the PLLLS flag */
   /* 1ms delay is inserted that is the minimum HAL delay granularity */
-  HAL_Delay(1);
+  stusb_delay_ms(1);
 
   /* Get tick */
   tickstart = HAL_GetTick();
