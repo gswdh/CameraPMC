@@ -19,6 +19,12 @@ void pwr_sys_on()
 	HAL_GPIO_WritePin(PWR_DDR3_1V35_EN_GPIO_Port, PWR_DDR3_1V35_EN_Pin, 1);
 	HAL_GPIO_WritePin(PWR_SYS_3V3_EN_GPIO_Port, PWR_SYS_3V3_EN_Pin, 1);
 	osDelay(10);
+
+	HAL_GPIO_WritePin(FPGA_NINIT_GPIO_Port, FPGA_NINIT_Pin, 1);
+	HAL_GPIO_WritePin(FPGA_NPROG_GPIO_Port, FPGA_NPROG_Pin, 1);
+	//HAL_GPIO_WritePin(PSS_NRST_GPIO_Port, PSS_NRST_Pin, 1);
+	//HAL_GPIO_WritePin(PSS_NSRST_GPIO_Port, PSS_NSRST_Pin, 1);
+	
 }
 
 void pwr_sys_off()
@@ -60,6 +66,8 @@ void pwr_sleep()
 void pwr_start()
 {
 	usbpd_start();
+
+	pwr_sys_on();
 }
 
 void pwr_task(void * params)

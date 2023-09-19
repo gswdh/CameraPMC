@@ -10,20 +10,12 @@
 
 void stusb_read_burst(uint8_t reg_addr, uint8_t *data, uint16_t length)
 {
-    uint8_t status = HAL_I2C_Mem_Read(&hi2c3, STUSB_I2C_ADDR, (uint16_t)reg_addr, I2C_MEMADD_SIZE_8BIT, data, length, 10000);
-
-    if (status != HAL_OK)
-    {
-        __NOP();
-    }
+    HAL_I2C_Mem_Read(&hi2c3, STUSB_I2C_ADDR, (uint16_t)reg_addr, I2C_MEMADD_SIZE_8BIT, data, length, 10000);
 }
 
 void stusb_write_burst(uint8_t reg_addr, uint8_t *data, uint16_t length)
 {
-    if (HAL_I2C_Mem_Write(&hi2c3, STUSB_I2C_ADDR, (uint16_t)reg_addr, I2C_MEMADD_SIZE_8BIT, data, length, 10) != HAL_OK)
-    {
-        __NOP();
-    }
+    HAL_I2C_Mem_Write(&hi2c3, STUSB_I2C_ADDR, (uint16_t)reg_addr, I2C_MEMADD_SIZE_8BIT, data, length, 10);
 }
 
 void stusb_set_reset(bool en)
@@ -53,7 +45,16 @@ bool stusb_get_pok3()
 
 void usbpd_start()
 {
-    uint8_t pdo_number = stusb_get_pdo_selected();
+    for(uint8_t i = 1; i < 4; i++)
+    {
+        pdo_t pdo = stusb_read_pdo(i);
+        __NOP();
+    }
+
+    pdo_select_t pdo_number = stusb_get_pdo();
+    stusb_set_pdo(PDO2);
+    pdo_number = stusb_get_pdo();
+    
     bool nint = stusb_get_nint();
     bool attach = stusb_get_attach();
     bool pok2 = stusb_get_pok2();

@@ -61,21 +61,22 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PAPin PAPin PAPin PAPin
                            PAPin PAPin */
-  GPIO_InitStruct.Pin = PWR_VBAT_EN_Pin|PSS_NSRST_Pin|STUSB_RESET_Pin|PWR_SYS_3V3_EN_Pin
+  GPIO_InitStruct.Pin = PWR_VBAT_EN_Pin|STUSB_RESET_Pin|PWR_SYS_3V3_EN_Pin
                           |PWR_DIG_1V8_EN_Pin|PWR_DDR3_1V35_EN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+
   /*Configure GPIO pins : PAPin PAPin */
-  GPIO_InitStruct.Pin = BMS_NPRESENT_Pin|BMS_NINT_Pin|SYS_WAKE_Pin;
+  GPIO_InitStruct.Pin = BMS_NPRESENT_Pin|BMS_NINT_Pin|SYS_WAKE_Pin|PSS_NSRST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PCPin PCPin PCPin PCPin */
-  GPIO_InitStruct.Pin = PSS_NRST_Pin|PMC_LED_RUN_Pin|PMC_LED_FPGA_OK_Pin|PMC_LED_STATUS_Pin;
+  GPIO_InitStruct.Pin = PMC_LED_RUN_Pin|PMC_LED_FPGA_OK_Pin|PMC_LED_STATUS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -83,9 +84,9 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PCPin PCPin PCPin PCPin
                            PCPin */
-  GPIO_InitStruct.Pin = PSS_PMC_FLAG_Pin|STUSB_ORI_Pin;
+  GPIO_InitStruct.Pin = PSS_PMC_FLAG_Pin|STUSB_ORI_Pin|PSS_NRST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
     /*Configure GPIO pins : PCPin PCPin PCPin PCPin
@@ -105,15 +106,22 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PBPin PBPin PBPin PBPin
                            PBPin PBPin PBPin */
-  GPIO_InitStruct.Pin = ACT_NCHG_Pin|ACT_NINT_Pin|FPGA_NPROG_Pin|FPGA_NINIT_Pin|FPGA_DONE_Pin;
+  GPIO_InitStruct.Pin = ACT_NCHG_Pin|ACT_NINT_Pin|FPGA_DONE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : PBPin PBPin PBPin PBPin
+                           PBPin PBPin PBPin */
+  GPIO_InitStruct.Pin = FPGA_NPROG_Pin|FPGA_NINIT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
     /*Configure GPIO pins : PBPin PBPin PBPin PBPin
                            PBPin PBPin PBPin */
-  GPIO_InitStruct.Pin = STUSB_PD0_Pin
-                          |STUSB_NINT_Pin;
+  GPIO_InitStruct.Pin = STUSB_PD0_Pin|STUSB_NINT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
