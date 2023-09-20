@@ -399,7 +399,7 @@ HAL_StatusTypeDef HAL_DACEx_SelfCalibrate(DAC_HandleTypeDef *hdac, DAC_ChannelCo
 
       /* tOFFTRIMmax delay x ms as per datasheet (electrical characteristics */
       /* i.e. minimum time needed between two calibration steps */
-      stusb_delay_ms(1);
+      HAL_Delay(1);
 
       if ((hdac->Instance->SR & (DAC_SR_CAL_FLAG1 << (Channel & 0x10UL))) == (DAC_SR_CAL_FLAG1 << (Channel & 0x10UL)))
       {
@@ -421,7 +421,7 @@ HAL_StatusTypeDef HAL_DACEx_SelfCalibrate(DAC_HandleTypeDef *hdac, DAC_ChannelCo
 
     /* tOFFTRIMmax delay x ms as per datasheet (electrical characteristics */
     /* i.e. minimum time needed between two calibration steps */
-    stusb_delay_ms(1U);
+    HAL_Delay(1U);
 
     if ((hdac->Instance->SR & (DAC_SR_CAL_FLAG1 << (Channel & 0x10UL))) == 0UL)
     {

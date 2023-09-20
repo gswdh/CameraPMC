@@ -3,6 +3,8 @@
         "stdbool.h": "c",
         "usart.h": "c",
         "stusb4500.h": "c",
-        "logging.h": "c"
+        "logging.h": "c",
+        "type_traits": "c",
+        "usbpd.h": "c"
     }
 }

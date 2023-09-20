@@ -1,8 +1,41 @@
 #include "power.h"
 
 #include "gpio.h"
+#include "adc.h"
 #include "cmsis_os.h"
 #include "usbpd.h"
+#include "logging.h"
+
+#define LOG_TAG "PWR"
+
+osThreadId_t power_task_handle;
+const osThreadAttr_t power_task_attributes = {
+	.name = "power_task",
+	.stack_size = 1024,
+	.priority = (osPriority_t)osPriorityNormal,
+};
+
+uint16_t pwr_measure_results[2] = {0};
+
+void pwr_measure_start()
+{
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)pwr_measure_results, 2);
+}
+
+float pwr_measure_voltage_V()
+{
+	return (float)pwr_measure_results[1] * 6.591796875e-3;
+}
+
+float pwr_measure_current_A()
+{
+	return (float)pwr_measure_results[0] * 263.671875e-6;
+}
+
+float pwr_measure_power_W()
+{
+	return pwr_measure_current_A() * pwr_measure_voltage_V();
+}
 
 void pwr_sys_on()
 {
@@ -22,9 +55,6 @@ void pwr_sys_on()
 
 	HAL_GPIO_WritePin(FPGA_NINIT_GPIO_Port, FPGA_NINIT_Pin, 1);
 	HAL_GPIO_WritePin(FPGA_NPROG_GPIO_Port, FPGA_NPROG_Pin, 1);
-	//HAL_GPIO_WritePin(PSS_NRST_GPIO_Port, PSS_NRST_Pin, 1);
-	//HAL_GPIO_WritePin(PSS_NSRST_GPIO_Port, PSS_NSRST_Pin, 1);
-	
 }
 
 void pwr_sys_off()
@@ -68,9 +98,23 @@ void pwr_start()
 	usbpd_start();
 
 	pwr_sys_on();
+
+	pwr_measure_start();
+
+	power_task_handle = osThreadNew(pwr_task, NULL, &power_task_attributes);
 }
 
-void pwr_task(void * params)
+void pwr_task(void *params)
 {
+	uint32_t tick = osKernelSysTick();
 
+	while (1)
+	{
+		if (osKernelSysTick() > (tick + 100000))
+		{
+			tick = osKernelSysTick();
+
+			log_info("%s %fV\t%fA\t%fW\n", LOG_TAG, pwr_measure_voltage_V(), pwr_measure_current_A(), pwr_measure_power_W());
+		}
+	}
 }

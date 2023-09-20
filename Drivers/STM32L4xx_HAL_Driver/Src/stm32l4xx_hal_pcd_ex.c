@@ -164,7 +164,7 @@ void HAL_PCDEx_BCD_VBUSDetect(PCD_HandleTypeDef *hpcd)
   USBx->GCCFG |= USB_OTG_GCCFG_DCDEN;
 
   /* Wait for Min DCD Timeout */
-  stusb_delay_ms(300U);
+  HAL_Delay(300U);
 
   /* Check Detect flag */
   if ((USBx->GCCFG & USB_OTG_GCCFG_DCDET) == USB_OTG_GCCFG_DCDET)
@@ -179,9 +179,9 @@ void HAL_PCDEx_BCD_VBUSDetect(PCD_HandleTypeDef *hpcd)
   /* Primary detection: checks if connected to Standard Downstream Port
   (without charging capability) */
   USBx->GCCFG &= ~ USB_OTG_GCCFG_DCDEN;
-  stusb_delay_ms(50U);
+  HAL_Delay(50U);
   USBx->GCCFG |=  USB_OTG_GCCFG_PDEN;
-  stusb_delay_ms(50U);
+  HAL_Delay(50U);
 
   if ((USBx->GCCFG & USB_OTG_GCCFG_PDET) == 0U)
   {
@@ -197,9 +197,9 @@ void HAL_PCDEx_BCD_VBUSDetect(PCD_HandleTypeDef *hpcd)
     /* start secondary detection to check connection to Charging Downstream
     Port or Dedicated Charging Port */
     USBx->GCCFG &= ~ USB_OTG_GCCFG_PDEN;
-    stusb_delay_ms(50U);
+    HAL_Delay(50U);
     USBx->GCCFG |=  USB_OTG_GCCFG_SDEN;
-    stusb_delay_ms(50U);
+    HAL_Delay(50U);
 
     if ((USBx->GCCFG & USB_OTG_GCCFG_SDET) == USB_OTG_GCCFG_SDET)
     {
@@ -390,7 +390,7 @@ void HAL_PCDEx_BCD_VBUSDetect(PCD_HandleTypeDef *hpcd)
   uint32_t tickstart = HAL_GetTick();
 
   /* Wait for Min DCD Timeout */
-  stusb_delay_ms(300U);
+  HAL_Delay(300U);
 
   /* Data Pin Contact ? Check Detect flag */
   if ((USBx->BCDR & USB_BCDR_DCDET) == USB_BCDR_DCDET)
@@ -404,9 +404,9 @@ void HAL_PCDEx_BCD_VBUSDetect(PCD_HandleTypeDef *hpcd)
   /* Primary detection: checks if connected to Standard Downstream Port
   (without charging capability) */
   USBx->BCDR &= ~(USB_BCDR_DCDEN);
-  stusb_delay_ms(50U);
+  HAL_Delay(50U);
   USBx->BCDR |= (USB_BCDR_PDEN);
-  stusb_delay_ms(50U);
+  HAL_Delay(50U);
 
   /* If Charger detect ? */
   if ((USBx->BCDR & USB_BCDR_PDET) == USB_BCDR_PDET)
@@ -414,9 +414,9 @@ void HAL_PCDEx_BCD_VBUSDetect(PCD_HandleTypeDef *hpcd)
     /* Start secondary detection to check connection to Charging Downstream
     Port or Dedicated Charging Port */
     USBx->BCDR &= ~(USB_BCDR_PDEN);
-    stusb_delay_ms(50U);
+    HAL_Delay(50U);
     USBx->BCDR |= (USB_BCDR_SDEN);
-    stusb_delay_ms(50U);
+    HAL_Delay(50U);
 
     /* If CDP ? */
     if ((USBx->BCDR & USB_BCDR_SDET) == USB_BCDR_SDET)
