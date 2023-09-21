@@ -36,7 +36,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define LOG_TAG "INIT"
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -75,7 +75,7 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
   log_start();
-  log_info("Starting system.");
+  log_info(LOG_TAG, "Starting system\n");
 
   pwr_start();
   /* USER CODE END Init */
@@ -139,7 +139,7 @@ void StartDefaultTask(void *argument)
     {
       if(osKernelSysTick() > (tick + 1000))
       {
-        log_info("Button (thumb) held for more than one second, turning system off.");
+        log_info(LOG_TAG, "Button (thumb) held for more than one second, turning system off.");
 
         while(HAL_GPIO_ReadPin(SYS_WAKE_GPIO_Port, SYS_WAKE_Pin))
         {

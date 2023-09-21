@@ -1,23 +1,19 @@
 
 
-
 Breakpoint=/Users/georgewaller/Projects/CameraPMC/setup/freertos.c:132:5, State=BP_STATE_DISABLED
-OpenDocument="gpio.c", FilePath="/Users/georgewaller/Projects/CameraPMC/setup/gpio.c", Line=11
-OpenDocument="stm32l4xx_hal_i2c.c", FilePath="/Users/georgewaller/Projects/CameraPMC/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c", Line=2529
-OpenDocument="stusb4500.c", FilePath="/Users/georgewaller/Projects/CameraPMC/gsembedlib/stusb4500/stusb4500.c", Line=0
+OpenDocument="power.c", FilePath="/Users/georgewaller/Projects/CameraPMC/program/power.c", Line=3
+OpenDocument="logging.c", FilePath="/Users/georgewaller/Projects/CameraPMC/program/logging.c", Line=0
+OpenDocument="log.h", FilePath="/Users/georgewaller/Projects/CameraPMC/log/src/log.h", Line=0
 OpenDocument="log.c", FilePath="/Users/georgewaller/Projects/CameraPMC/log/src/log.c", Line=47
-OpenDocument="startup_stm32l431xx.s", FilePath="/Users/georgewaller/Projects/CameraPMC/startup_stm32l431xx.s", Line=31
-OpenDocument="usbpd.c", FilePath="/Users/georgewaller/Projects/CameraPMC/program/usbpd.c", Line=0
 OpenDocument="main.c", FilePath="/Users/georgewaller/Projects/CameraPMC/setup/main.c", Line=42
-OpenDocument="power.c", FilePath="/Users/georgewaller/Projects/CameraPMC/program/power.c", Line=0
 OpenToolbar="Debug", Floating=0, x=0, y=0
-OpenWindow="Call Stack", DockArea=LEFT, x=0, y=0, w=856, h=473, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Global Data", DockArea=LEFT, x=0, y=1, w=856, h=907, TabPos=1, TopOfStack=0, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Local Data", DockArea=LEFT, x=0, y=1, w=856, h=907, TabPos=0, TopOfStack=1, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-TableHeader="Global Data", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Location";"Size";"Type";"Scope"], ColWidths=[196;221;62;39;43;295]
+OpenWindow="Call Stack", DockArea=LEFT, x=0, y=1, w=856, h=337, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Local Data", DockArea=LEFT, x=0, y=2, w=856, h=656, TabPos=0, TopOfStack=1, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Watched Data 1", DockArea=LEFT, x=0, y=0, w=856, h=400, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+TableHeader="Local Data", SortCol="Value", SortOrder="DESCENDING", VisibleCols=["Name";"Value";"Location";"Size";"Type";"Scope"], ColWidths=[149;464;105;54;57;100]
 TableHeader="Call Stack", SortCol="Function", SortOrder="ASCENDING", VisibleCols=["Function";"Source"], ColWidths=[250;606]
 TableHeader="Power Sampling", SortCol="Index", SortOrder="ASCENDING", VisibleCols=["Index";"Time";"Ch 0"], ColWidths=[100;100;100]
 TableHeader="RegisterSelectionDialog", SortCol="None", SortOrder="ASCENDING", VisibleCols=[], ColWidths=[]
-TableHeader="Local Data", SortCol="Value", SortOrder="DESCENDING", VisibleCols=["Name";"Value";"Location";"Size";"Type";"Scope"], ColWidths=[149;464;105;54;57;100]
 TableHeader="TargetExceptionDialog", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Address";"Description"], ColWidths=[200;218;100;913]
-WatchedExpression="log_buffer", RefreshRate=1, Window=Watched Data 1
+TableHeader="Watched Data 1", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Value";"Location";"Refresh"], ColWidths=[137;160;100;459]
+WatchedExpression="pwr_measure_results", Window=Watched Data 1

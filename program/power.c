@@ -106,15 +106,19 @@ void pwr_start()
 
 void pwr_task(void *params)
 {
-	uint32_t tick = osKernelSysTick();
+	uint32_t tick = osKernelGetTickCount();
 
 	while (1)
 	{
-		if (osKernelSysTick() > (tick + 100000))
+		if (osKernelGetTickCount() > (tick + 1000))
 		{
-			tick = osKernelSysTick();
+			tick = osKernelGetTickCount();
 
-			log_info("%s %fV\t%fA\t%fW\n", LOG_TAG, pwr_measure_voltage_V(), pwr_measure_current_A(), pwr_measure_power_W());
+			float v = pwr_measure_voltage_V();
+			float a = pwr_measure_current_A();
+			float w = pwr_measure_power_W();
+			
+			log_info(LOG_TAG, "System consumption = %2.3fV %2.3fA %2.3fW\n", v, a, w);
 		}
 	}
 }

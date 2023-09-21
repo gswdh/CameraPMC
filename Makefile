@@ -87,8 +87,7 @@ program/usbpd.c \
 program/logging.c \
 \
 gsembedlib/stusb4500/stusb4500.c \
-\
-log/src/log.c 
+gsembedlib/log/log.c \
 
 # ASM sources
 ASM_SOURCES =  \
@@ -157,7 +156,8 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Include \
 -Iprogram \
 -Igsembedlib/stusb4500 \
--Ilog/src \
+-Igsembedlib/log \
+
 
 
 # compile gcc flags
@@ -183,7 +183,7 @@ LDSCRIPT = STM32L431RBTx_FLASH.ld
 # libraries
 LIBS = -lc -lm -lnosys 
 LIBDIR = 
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections -u printf_float
+LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections -u _printf_float
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin

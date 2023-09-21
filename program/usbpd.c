@@ -59,11 +59,11 @@ void usbpd_start()
     bool attach = stusb_get_attach();
     bool pok2 = stusb_get_pok2();
     bool pok3 = stusb_get_pok3();
-    log_info("%s PDO selected is = %u", "USBPD", pdo_number);
-    log_info("%s Interrupt level is = %u", LOG_TAG, nint);
-    log_info("%s Attach level is = %u", LOG_TAG, attach);
-    log_info("%s POK2 level is = %u", LOG_TAG, pok2);
-    log_info("%s POK3 level is = %u", LOG_TAG, pok3);
+    log_info(LOG_TAG, "PDO selected is = %u\n", pdo_number);
+    log_info(LOG_TAG, "Interrupt level is = %u\n", nint);
+    log_info(LOG_TAG, "Attach level is = %u\n", attach);
+    log_info(LOG_TAG, "POK2 level is = %u\n", pok2);
+    log_info(LOG_TAG, "POK3 level is = %u\n", pok3);
 
     __NOP();
 }
