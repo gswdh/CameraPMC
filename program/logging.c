@@ -7,9 +7,6 @@
 
 uint8_t log_buffer[LOG_BUFFER_LEN] = {0};
 
-static const char *level_strings[] = {
-    "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
-
 void log_send_data(const char * msg, uint32_t msg_len)
 {
     HAL_UART_Transmit(&huart1, msg, msg_len, 100);
@@ -22,5 +19,5 @@ uint32_t log_get_time()
 
 void log_start()
 {
-	
+
 }
