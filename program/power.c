@@ -93,6 +93,16 @@ void pwr_sleep()
 	HAL_PWR_EnterSTANDBYMode();
 }
 
+void pwr_start_charging(float max_input_current)
+{
+
+}
+
+void pwr_stop_charging()
+{
+
+}
+
 void pwr_start()
 {
 	usbpd_start();

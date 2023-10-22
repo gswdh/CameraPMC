@@ -88,6 +88,8 @@ program/logging.c \
 \
 gsembedlib/stusb4500/stusb4500.c \
 gsembedlib/log/log.c \
+gsembedlib/act2861/act2861.c \
+gsembedlib/act2861/charger.c \
 
 # ASM sources
 ASM_SOURCES =  \
@@ -157,6 +159,7 @@ C_INCLUDES =  \
 -Iprogram \
 -Igsembedlib/stusb4500 \
 -Igsembedlib/log \
+-Igsembedlib/act2861 \
 
 
 
