@@ -14,5 +14,6 @@ void pwr_sleep();
 
 void pwr_start();
 void pwr_task(void * params);
+void chrg_task(void * params);
 
 #endif

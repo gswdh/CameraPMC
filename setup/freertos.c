@@ -80,15 +80,16 @@ void MX_FREERTOS_Init(void) {
   log_info(LOG_TAG, "Starting system\n");
 
   pwr_start();
-  pwr_sys_on();
-
+  
   startup_task_handle = osThreadNew(startup_task, NULL, &defaultTask_attributes);
 }
 
 void startup_task(void *args)
 {
+  pwr_sys_on();
+
   blink_task_handle = osThreadNew(blink_task, NULL, &defaultTask_attributes);
-  button_task_handle = osThreadNew(button_task, NULL, &defaultTask_attributes);
+  //button_task_handle = osThreadNew(button_task, NULL, &defaultTask_attributes);
 
   osThreadTerminate(osThreadGetId());
 }

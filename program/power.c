@@ -1,16 +1,52 @@
 #include "power.h"
 
 #include "gpio.h"
+#include "i2c.h"
 #include "adc.h"
 #include "cmsis_os.h"
 #include "usbpd.h"
 #include "logging.h"
+#include "act2861.h"
+#include "charger.h"
 
 #define LOG_TAG "PWR"
 
+act_error act_write_regs(uint8_t addr, uint8_t *data, uint8_t len)
+{
+	volatile HAL_StatusTypeDef status = HAL_I2C_Mem_Write(&hi2c2, ACT_I2C_ADDR, (uint16_t)addr, I2C_MEMADD_SIZE_8BIT, data, (uint16_t)len, 15);
+	return ACT_OK;
+}
+
+act_error act_read_regs(uint8_t addr, uint8_t *data, uint8_t len)
+{
+	volatile HAL_StatusTypeDef status = HAL_I2C_Mem_Read(&hi2c2, ACT_I2C_ADDR, (uint16_t)addr, I2C_MEMADD_SIZE_8BIT, data, (uint16_t)len, 15);
+	return ACT_OK;
+}
+
+bool act_get_irq_pin()
+{
+	return (bool)HAL_GPIO_ReadPin(ACT_NINT_GPIO_Port, ACT_NINT_Pin);
+}
+
+void act_delay_ms(uint32_t time_ms)
+{
+	osDelay(time_ms);
+}
+
+uint32_t act_get_tick_ms()
+{
+	return osKernelGetTickCount();
+}
+
 osThreadId_t power_task_handle;
+osThreadId_t chrg_task_handle;
 const osThreadAttr_t power_task_attributes = {
 	.name = "power_task",
+	.stack_size = 1024,
+	.priority = (osPriority_t)osPriorityNormal,
+};
+const osThreadAttr_t charge_task_attributes = {
+	.name = "charge_task",
 	.stack_size = 1024,
 	.priority = (osPriority_t)osPriorityNormal,
 };
@@ -112,6 +148,7 @@ void pwr_start()
 	pwr_measure_start();
 
 	power_task_handle = osThreadNew(pwr_task, NULL, &power_task_attributes);
+	chrg_task_handle = osThreadNew(chrg_task, NULL, &charge_task_attributes);
 }
 
 void pwr_task(void *params)
@@ -130,5 +167,30 @@ void pwr_task(void *params)
 			
 			log_info(LOG_TAG, "System consumption = %2.3fV %2.3fA %2.3fW\n", v, a, w);
 		}
+
+		osDelay(10);
 	}
+}
+
+void chrg_task(void * params)
+{
+	CHRG_EnterHiZ();
+
+	CHRG_ADCResults results = {0};
+
+	uint32_t tick = osKernelGetTickCount();
+
+	while (1)
+	{
+		if (osKernelGetTickCount() > (tick + 1000))
+		{
+			tick = osKernelGetTickCount();
+
+			CHRG_GetADCResults(&results);
+
+			asm("NOP");
+		}
+
+		osDelay(10);
+	}	
 }
