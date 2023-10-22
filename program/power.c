@@ -1,5 +1,6 @@
 #include "power.h"
 
+#include "program.h"
 #include "gpio.h"
 #include "i2c.h"
 #include "adc.h"
@@ -8,18 +9,21 @@
 #include "logging.h"
 #include "act2861.h"
 #include "charger.h"
+#include "stusb4500.h"
 
 #define LOG_TAG "PWR"
 
+uint16_t pwr_measure_results[2] = {0};
+
 act_error act_write_regs(uint8_t addr, uint8_t *data, uint8_t len)
 {
-	volatile HAL_StatusTypeDef status = HAL_I2C_Mem_Write(&hi2c2, ACT_I2C_ADDR, (uint16_t)addr, I2C_MEMADD_SIZE_8BIT, data, (uint16_t)len, 15);
+	HAL_I2C_Mem_Write(&hi2c2, ACT_I2C_ADDR, (uint16_t)addr, I2C_MEMADD_SIZE_8BIT, data, (uint16_t)len, 15);
 	return ACT_OK;
 }
 
 act_error act_read_regs(uint8_t addr, uint8_t *data, uint8_t len)
 {
-	volatile HAL_StatusTypeDef status = HAL_I2C_Mem_Read(&hi2c2, ACT_I2C_ADDR, (uint16_t)addr, I2C_MEMADD_SIZE_8BIT, data, (uint16_t)len, 15);
+	HAL_I2C_Mem_Read(&hi2c2, ACT_I2C_ADDR, (uint16_t)addr, I2C_MEMADD_SIZE_8BIT, data, (uint16_t)len, 15);
 	return ACT_OK;
 }
 
@@ -37,21 +41,6 @@ uint32_t act_get_tick_ms()
 {
 	return osKernelGetTickCount();
 }
-
-osThreadId_t power_task_handle;
-osThreadId_t chrg_task_handle;
-const osThreadAttr_t power_task_attributes = {
-	.name = "power_task",
-	.stack_size = 1024,
-	.priority = (osPriority_t)osPriorityNormal,
-};
-const osThreadAttr_t charge_task_attributes = {
-	.name = "charge_task",
-	.stack_size = 1024,
-	.priority = (osPriority_t)osPriorityNormal,
-};
-
-uint16_t pwr_measure_results[2] = {0};
 
 void pwr_measure_start()
 {
@@ -129,6 +118,16 @@ void pwr_sleep()
 	HAL_PWR_EnterSTANDBYMode();
 }
 
+pwr_wake_source_t pwr_get_wake_source()
+{
+	if(stusb_get_attach() == 0)
+	{
+		return PWR_WAKE_USB;	
+	}
+
+	return PWR_WAKE_BUTTON;
+}
+
 void pwr_start_charging(float max_input_current)
 {
 
@@ -143,32 +142,31 @@ void pwr_start()
 {
 	usbpd_start();
 
-	pwr_sys_on();
-
 	pwr_measure_start();
 
-	power_task_handle = osThreadNew(pwr_task, NULL, &power_task_attributes);
-	chrg_task_handle = osThreadNew(chrg_task, NULL, &charge_task_attributes);
+	xTaskCreate(pwr_task, "Power", 1024, NULL, tskIDLE_PRIORITY, NULL);
+	xTaskCreate(chrg_task, "Charger", 1024, NULL, tskIDLE_PRIORITY, NULL);
 }
 
 void pwr_task(void *params)
 {
-	uint32_t tick = osKernelGetTickCount();
+	uint32_t tick = sys_get_tick();
 
 	while (1)
 	{
-		if (osKernelGetTickCount() > (tick + 1000))
+		if (sys_get_tick() > (tick + 1000))
 		{
-			tick = osKernelGetTickCount();
+			tick = sys_get_tick();
 
 			float v = pwr_measure_voltage_V();
 			float a = pwr_measure_current_A();
 			float w = pwr_measure_power_W();
-			
-			log_info(LOG_TAG, "System consumption = %2.3fV %2.3fA %2.3fW\n", v, a, w);
-		}
+			pdo_select_t pdo_number = stusb_get_pdo();
+			pdo_t pdo = stusb_read_pdo(pdo_number);
 
-		osDelay(10);
+			log_info(LOG_TAG, "System consumption = %2.3fV %2.3fA %2.3fW.\n", v, a, w);
+			//log_info(LOG_TAG, "PDO Status = %u %2.3fV %2.3fA.\n", pdo_number, pdo.voltage, pdo.current);
+		}
 	}
 }
 
@@ -178,19 +176,27 @@ void chrg_task(void * params)
 
 	CHRG_ADCResults results = {0};
 
-	uint32_t tick = osKernelGetTickCount();
+	uint32_t tick = sys_get_tick();
 
 	while (1)
 	{
-		if (osKernelGetTickCount() > (tick + 1000))
+		if (sys_get_tick() > (tick + 1000))
 		{
-			tick = osKernelGetTickCount();
+			tick = sys_get_tick();
+
+			volatile bool enter_charge = false;
+			if(enter_charge)
+			{
+				CHRG_EnableCharging(1, 3);
+			}
 
 			CHRG_GetADCResults(&results);
 
-			asm("NOP");
-		}
 
-		osDelay(10);
+			log_info(LOG_TAG, "V_BAT = %2.3fV I_BAT = %2.3fA I_IN = %2.3fA.\n", 
+				results.v_bat_volts,
+				results.i_bat_amps, 
+				results.i_in_amps);
+		}
 	}	
 }

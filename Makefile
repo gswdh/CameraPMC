@@ -38,7 +38,6 @@ BUILD_DIR = build
 C_SOURCES =  \
 setup/main.c \
 setup/gpio.c \
-setup/freertos.c \
 setup/adc.c \
 setup/dma.c \
 setup/i2c.c \
@@ -85,6 +84,7 @@ Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
 program/power.c \
 program/usbpd.c \
 program/logging.c \
+program/program.c \
 \
 gsembedlib/stusb4500/stusb4500.c \
 gsembedlib/log/log.c \
