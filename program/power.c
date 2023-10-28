@@ -164,7 +164,11 @@ void pwr_task(void *params)
 			pdo_select_t pdo_number = stusb_get_pdo();
 			pdo_t pdo = stusb_read_pdo(pdo_number);
 
-			log_info(LOG_TAG, "System consumption = %2.3fV %2.3fA %2.3fW.\n", v, a, w);
+
+			log_set_bar("System Voltage", v);
+			log_set_bar("System Current", a);
+			log_set_bar("System Power", w);
+			//log_info(LOG_TAG, "System consumption = %2.3fV %2.3fA %2.3fW.\n", v, a, w);
 			//log_info(LOG_TAG, "PDO Status = %u %2.3fV %2.3fA.\n", pdo_number, pdo.voltage, pdo.current);
 		}
 	}
@@ -178,25 +182,24 @@ void chrg_task(void * params)
 
 	uint32_t tick = sys_get_tick();
 
+	sys_delay(10);
+
+	CHRG_EnableCharging(5, 1);
+
 	while (1)
 	{
 		if (sys_get_tick() > (tick + 1000))
 		{
 			tick = sys_get_tick();
 
-			volatile bool enter_charge = false;
-			if(enter_charge)
-			{
-				CHRG_EnableCharging(1, 3);
-			}
-
 			CHRG_GetADCResults(&results);
 
-
-			log_info(LOG_TAG, "V_BAT = %2.3fV I_BAT = %2.3fA I_IN = %2.3fA.\n", 
-				results.v_bat_volts,
-				results.i_bat_amps, 
-				results.i_in_amps);
+			log_set_bar("Battery Voltage", results.v_bat_volts);
+			log_set_bar("Battery Current", results.i_bat_amps);
+			log_set_bar("Charger Current", results.i_in_amps);
 		}
 	}	
 }
+
+
+
