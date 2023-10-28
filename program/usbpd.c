@@ -45,13 +45,16 @@ bool stusb_get_pok3()
 
 void usbpd_start()
 {
+	sys_delay(100);
     pdo_select_t pdo_number = stusb_get_pdo();
-    
+	pdo_t pdo = stusb_read_pdo(pdo_number);
     bool nint = stusb_get_nint();
     bool attach = stusb_get_attach();
     bool pok2 = stusb_get_pok2();
     bool pok3 = stusb_get_pok3();
     log_info(LOG_TAG, "PDO selected is = %u\n", pdo_number);
+    log_info(LOG_TAG, "Selected voltage is = %fV\n", pdo.voltage);
+    log_info(LOG_TAG, "Selected current is = %fA\n", pdo.current);
     log_info(LOG_TAG, "Interrupt level is = %u\n", nint);
     log_info(LOG_TAG, "Attach level is = %u\n", attach);
     log_info(LOG_TAG, "POK2 level is = %u\n", pok2);

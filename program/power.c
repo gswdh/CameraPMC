@@ -161,30 +161,22 @@ void pwr_task(void *params)
 			float v = pwr_measure_voltage_V();
 			float a = pwr_measure_current_A();
 			float w = pwr_measure_power_W();
-			pdo_select_t pdo_number = stusb_get_pdo();
-			pdo_t pdo = stusb_read_pdo(pdo_number);
-
 
 			log_set_bar("System Voltage", v);
 			log_set_bar("System Current", a);
 			log_set_bar("System Power", w);
-			//log_info(LOG_TAG, "System consumption = %2.3fV %2.3fA %2.3fW.\n", v, a, w);
-			//log_info(LOG_TAG, "PDO Status = %u %2.3fV %2.3fA.\n", pdo_number, pdo.voltage, pdo.current);
 		}
 	}
 }
 
 void chrg_task(void * params)
 {
-	CHRG_EnterHiZ();
-
-	CHRG_ADCResults results = {0};
-
 	uint32_t tick = sys_get_tick();
 
-	sys_delay(10);
+	bool usb_attached_n = true;
 
-	CHRG_EnableCharging(5, 1);
+	pdo_t pdo = {.voltage=20, .current=3};
+	stusb_write_pdo(PDO3, pdo);
 
 	while (1)
 	{
@@ -192,11 +184,38 @@ void chrg_task(void * params)
 		{
 			tick = sys_get_tick();
 
+			CHRG_ADCResults results = {0};
 			CHRG_GetADCResults(&results);
 
 			log_set_bar("Battery Voltage", results.v_bat_volts);
 			log_set_bar("Battery Current", results.i_bat_amps);
 			log_set_bar("Charger Current", results.i_in_amps);
+
+			// Check to see if the USB has been plugged in or out
+			if(usb_attached_n != stusb_get_attach())
+			{
+				// Update the current status
+				usb_attached_n = stusb_get_attach();
+
+				// If not attached, put charger into idle
+				if(usb_attached_n)
+				{
+					log_info(LOG_TAG, "USB has been detached, stopping charging.\n");
+					CHRG_EnterHiZ();
+				}
+
+				// If attached, attempt to start charging
+				else
+				{
+					pdo_select_t pdo_selected = stusb_get_pdo();
+					pdo_t pdo = stusb_read_pdo(pdo_selected);
+					act_error error = CHRG_EnableCharging(5, pdo.current);
+					if(error == ACT_OK)
+						log_info(LOG_TAG, "USB has been attached. Started charging with a %2.3fA input current limit.\n", pdo.current);
+					else
+						log_info(LOG_TAG, "USB has been attached. Start charging failed with code = %u\n", error);
+				}
+			}
 		}
 	}	
 }
