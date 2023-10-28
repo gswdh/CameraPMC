@@ -17,15 +17,12 @@ void program_entry()
 	// Start up stuff
 	log_start();
 	log_info(LOG_TAG, "Starting system\n");
-	log_create_bar("Battery Voltage", "V", 8, 13);
-	log_create_bar("Battery Current", "A", -5, 5);
-	log_create_bar("Charger Current", "A", 0, 3.5);
-	log_create_bar("System Voltage", "V", 4, 22);
-	log_create_bar("System Current", "A", 0, 1);
-	log_create_bar("System Power", "W", 0, 5);
 
 	// Init the power system
 	pwr_start();
+
+	// Power the system up
+	pwr_sys_on();
 
 	// Get the wake up source
 	pwr_wake_source_t wake_source = pwr_get_wake_source();
@@ -41,8 +38,7 @@ void program_entry()
 		break;
 	}
 
-	pwr_sys_on();
-
+	// Activity status
 	xTaskCreate(blink_task, "Blink", 1024, NULL, tskIDLE_PRIORITY, NULL);
 }
 

@@ -19,5 +19,10 @@ uint32_t log_get_time()
 
 void log_start()
 {
-
+	log_create_bar("Battery Voltage", "V", 8, 13);
+	log_create_bar("Battery Current", "A", -5, 5);
+	log_create_bar("Charger Current", "A", 0, 3.5);
+	log_create_bar("System Voltage", "V", 4, 22);
+	log_create_bar("System Current", "A", 0, 1);
+	log_create_bar("System Power", "W", 0, 5);
 }

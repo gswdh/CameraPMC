@@ -120,9 +120,9 @@ void pwr_sleep()
 
 pwr_wake_source_t pwr_get_wake_source()
 {
-	if(stusb_get_attach() == 0)
+	if (stusb_get_attach() == 0)
 	{
-		return PWR_WAKE_USB;	
+		return PWR_WAKE_USB;
 	}
 
 	return PWR_WAKE_BUTTON;
@@ -130,12 +130,10 @@ pwr_wake_source_t pwr_get_wake_source()
 
 void pwr_start_charging(float max_input_current)
 {
-
 }
 
 void pwr_stop_charging()
 {
-
 }
 
 void pwr_start()
@@ -169,14 +167,13 @@ void pwr_task(void *params)
 	}
 }
 
-void chrg_task(void * params)
+void chrg_task(void *params)
 {
-	uint32_t tick = sys_get_tick();
-
 	bool usb_attached_n = true;
 
-	pdo_t pdo = {.voltage=20, .current=3};
-	stusb_write_pdo(PDO3, pdo);
+	CHRG_EnterHiZ();
+
+	uint32_t tick = sys_get_tick();
 
 	while (1)
 	{
@@ -192,33 +189,36 @@ void chrg_task(void * params)
 			log_set_bar("Charger Current", results.i_in_amps);
 
 			// Check to see if the USB has been plugged in or out
-			if(usb_attached_n != stusb_get_attach())
+			if (usb_attached_n != stusb_get_attach())
 			{
 				// Update the current status
 				usb_attached_n = stusb_get_attach();
 
 				// If not attached, put charger into idle
-				if(usb_attached_n)
+				if (usb_attached_n)
 				{
-					log_info(LOG_TAG, "USB has been detached, stopping charging.\n");
 					CHRG_EnterHiZ();
+					log_info(LOG_TAG, "USB has been detached, stopped charging.\n");
 				}
 
 				// If attached, attempt to start charging
 				else
 				{
-					pdo_select_t pdo_selected = stusb_get_pdo();
-					pdo_t pdo = stusb_read_pdo(pdo_selected);
+					pdo_t pdo = stusb_read_pdo_selected();
+					log_info(LOG_TAG, "PDO voltage = %2.3f, current = %2.3f.\n", pdo.voltage, pdo.current);
 					act_error error = CHRG_EnableCharging(5, pdo.current);
-					if(error == ACT_OK)
+					if (error == ACT_OK)
+					{
 						log_info(LOG_TAG, "USB has been attached. Started charging with a %2.3fA input current limit.\n", pdo.current);
+					}
+
 					else
-						log_info(LOG_TAG, "USB has been attached. Start charging failed with code = %u\n", error);
+					{
+						log_info(LOG_TAG, "USB has been attached. Start charging failed with code = %u. Moving to idle.\n", error);
+						CHRG_EnterHiZ();
+					}
 				}
 			}
 		}
-	}	
+	}
 }
-
-
-

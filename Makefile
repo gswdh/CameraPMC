@@ -92,6 +92,8 @@ gsembedlib/act2861/act2861.c \
 gsembedlib/act2861/charger.c \
 \
 cJSON/cJSON.c \
+\
+stusb4500_nvm/USBPD_CUST_NVM_API.c \
 
 # ASM sources
 ASM_SOURCES =  \
@@ -163,7 +165,7 @@ C_INCLUDES =  \
 -Igsembedlib/log \
 -Igsembedlib/act2861 \
 -IcJSON \
-
+-Istusb4500_nvm \
 
 
 # compile gcc flags

@@ -3,31 +3,31 @@
 Breakpoint=/Users/georgewaller/Projects/CameraPMC/Drivers/CMSIS/Include/cmsis_gcc.h:209:3, State=BP_STATE_DISABLED
 Breakpoint=/Users/georgewaller/Projects/CameraPMC/setup/main.c:84:1, State=BP_STATE_DISABLED
 Breakpoint=/Users/georgewaller/Projects/CameraPMC/program/power.c:122:1, State=BP_STATE_DISABLED
-Breakpoint=/Users/georgewaller/Projects/CameraPMC/program/power.c:165, State=BP_STATE_ON
-Breakpoint=/Users/georgewaller/Projects/CameraPMC/program/usbpd.c:50, State=BP_STATE_ON
+Breakpoint=/Users/georgewaller/Projects/CameraPMC/program/power.c:148, State=BP_STATE_DISABLED
+Breakpoint=/Users/georgewaller/Projects/CameraPMC/program/power.c:225, State=BP_STATE_ON
+Breakpoint=/Users/georgewaller/Projects/CameraPMC/gsembedlib/stusb4500/stusb4500.c:114, State=BP_STATE_DISABLED
 Breakpoint=/Users/georgewaller/Projects/CameraPMC/program/program.c:55:1, State=BP_STATE_DISABLED
-OpenDocument="main.c", FilePath="/Users/georgewaller/Projects/CameraPMC/setup/main.c", Line=53
+OpenDocument="stm32l4xx_it.c", FilePath="/Users/georgewaller/Projects/CameraPMC/setup/stm32l4xx_it.c", Line=74
+OpenDocument="main.c", FilePath="/Users/georgewaller/Projects/CameraPMC/setup/main.c", Line=55
 OpenDocument="usbpd.c", FilePath="/Users/georgewaller/Projects/CameraPMC/program/usbpd.c", Line=0
-OpenDocument="stusb4500.c", FilePath="/Users/georgewaller/Projects/CameraPMC/gsembedlib/stusb4500/stusb4500.c", Line=0
+OpenDocument="stusb4500.c", FilePath="/Users/georgewaller/Projects/CameraPMC/gsembedlib/stusb4500/stusb4500.c", Line=79
 OpenDocument="logging.c", FilePath="/Users/georgewaller/Projects/CameraPMC/program/logging.c", Line=0
-OpenDocument="port.c", FilePath="/Users/georgewaller/Projects/CameraPMC/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c", Line=200
-OpenDocument="portmacro.h", FilePath="/Users/georgewaller/Projects/CameraPMC/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h", Line=122
 OpenDocument="tasks.c", FilePath="/Users/georgewaller/Projects/CameraPMC/Middlewares/Third_Party/FreeRTOS/Source/tasks.c", Line=3370
-OpenDocument="startup_stm32l431xx.s", FilePath="/Users/georgewaller/Projects/CameraPMC/startup_stm32l431xx.s", Line=31
-OpenDocument="power.c", FilePath="/Users/georgewaller/Projects/CameraPMC/program/power.c", Line=84
-OpenDocument="stm32l4xx_hal_i2c.c", FilePath="/Users/georgewaller/Projects/CameraPMC/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c", Line=2576
+OpenDocument="startup_stm32l431xx.s", FilePath="/Users/georgewaller/Projects/CameraPMC/startup_stm32l431xx.s", Line=33
+OpenDocument="power.c", FilePath="/Users/georgewaller/Projects/CameraPMC/program/power.c", Line=130
 OpenDocument="program.c", FilePath="/Users/georgewaller/Projects/CameraPMC/program/program.c", Line=0
 OpenToolbar="Debug", Floating=0, x=0, y=0
 OpenWindow="Call Stack", DockArea=LEFT, x=0, y=2, w=955, h=301, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
 OpenWindow="Source Files", DockArea=LEFT, x=0, y=4, w=955, h=355, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Disassembly", DockArea=LEFT, x=0, y=0, w=955, h=82, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Global Data", DockArea=LEFT, x=0, y=3, w=955, h=345, TabPos=1, TopOfStack=0, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Local Data", DockArea=LEFT, x=0, y=3, w=955, h=345, TabPos=0, TopOfStack=1, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Watched Data 1", DockArea=LEFT, x=0, y=1, w=955, h=294, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Disassembly", DockArea=LEFT, x=0, y=0, w=955, h=74, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Global Data", DockArea=LEFT, x=0, y=3, w=955, h=286, TabPos=1, TopOfStack=0, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Local Data", DockArea=LEFT, x=0, y=3, w=955, h=286, TabPos=0, TopOfStack=1, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Watched Data 1", DockArea=LEFT, x=0, y=1, w=955, h=245, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
 TableHeader="Global Data", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Location";"Size";"Type";"Scope"], ColWidths=[196;221;62;39;43;394]
 TableHeader="Call Stack", SortCol="Function", SortOrder="ASCENDING", VisibleCols=["Function";"Source"], ColWidths=[250;705]
 TableHeader="Source Files", SortCol="File", SortOrder="ASCENDING", VisibleCols=["File";"Status";"Size";"#Insts";"Path"], ColWidths=[180;66;54;66;686]
 TableHeader="Power Sampling", SortCol="Index", SortOrder="ASCENDING", VisibleCols=["Index";"Time";"Ch 0"], ColWidths=[100;100;100]
+TableHeader="Task List", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Name";"Run Count";"Priority";"Status";"Timeout";"Stack Info (Free / Size)";"ID";"Mutex Count";"Notified Value";"Notify State"], ColWidths=[110;110;110;110;110;110;110;110;110;110]
 TableHeader="Watched Data 1", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Value";"Location";"Refresh"], ColWidths=[137;160;100;558]
 TableHeader="RegisterSelectionDialog", SortCol="None", SortOrder="ASCENDING", VisibleCols=[], ColWidths=[]
 TableHeader="Local Data", SortCol="Value", SortOrder="DESCENDING", VisibleCols=["Name";"Value";"Location";"Size";"Type";"Scope"], ColWidths=[237;185;105;54;128;246]
