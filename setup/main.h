@@ -137,6 +137,8 @@ void Error_Handler(void);
 #define FPGA_NINIT_GPIO_Port GPIOB
 #define FPGA_DONE_Pin GPIO_PIN_9
 #define FPGA_DONE_GPIO_Port GPIOB
+#define BTN_THUMB_Pin GPIO_PIN_2
+#define BTN_THUMB_GPIO_Port GPIOD
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

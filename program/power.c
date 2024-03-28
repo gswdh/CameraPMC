@@ -54,7 +54,7 @@ float pwr_measure_voltage_V()
 
 float pwr_measure_current_A()
 {
-	return (float)pwr_measure_results[0] * 263.671875e-6;
+	return (float)pwr_measure_results[0] * 329.589844e-6;
 }
 
 float pwr_measure_power_W()
@@ -136,6 +136,11 @@ void pwr_stop_charging()
 {
 }
 
+bool pwr_has_battery()
+{
+	return !HAL_GPIO_ReadPin(BMS_NPRESENT_GPIO_Port, BMS_NPRESENT_Pin);
+}
+
 void pwr_start()
 {
 	usbpd_start();
@@ -204,18 +209,28 @@ void chrg_task(void *params)
 				// If attached, attempt to start charging
 				else
 				{
-					pdo_t pdo = stusb_read_pdo_selected();
-					log_info(LOG_TAG, "PDO voltage = %2.3f, current = %2.3f.\n", pdo.voltage, pdo.current);
-					act_error error = CHRG_EnableCharging(5, pdo.current);
-					if (error == ACT_OK)
+					// Check if there's a pack attached
+					if(!pwr_has_battery())
 					{
-						log_info(LOG_TAG, "USB has been attached. Started charging with a %2.3fA input current limit.\n", pdo.current);
+						log_info(LOG_TAG, "No battery pack detected, will not attempt to charge.\n");
+
 					}
 
 					else
 					{
-						log_info(LOG_TAG, "USB has been attached. Start charging failed with code = %u. Moving to idle.\n", error);
-						CHRG_EnterHiZ();
+						pdo_t pdo = stusb_read_pdo_selected();
+						log_info(LOG_TAG, "PDO voltage = %2.3f, current = %2.3f.\n", pdo.voltage, pdo.current);
+						act_error error = CHRG_EnableCharging(5, pdo.current);
+						if (error == ACT_OK)
+						{
+							log_info(LOG_TAG, "USB has been attached. Started charging with a %2.3fA input current limit.\n", pdo.current);
+						}
+
+						else
+						{
+							log_info(LOG_TAG, "USB has been attached. Start charging failed with code = %u. Moving to idle.\n", error);
+							CHRG_EnterHiZ();
+						}
 					}
 				}
 			}

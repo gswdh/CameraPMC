@@ -3,6 +3,8 @@
 
 #include "main.h"
 
+#include <stdbool.h>
+
 typedef enum {PWR_WAKE_UNKNOWN, PWR_WAKE_BUTTON, PWR_WAKE_USB} pwr_wake_source_t;
 
 void pwr_measure_start();
@@ -17,6 +19,7 @@ pwr_wake_source_t pwr_get_wake_source();
 
 void pwr_start_charging(float max_input_current);
 void pwr_stop_charging();
+bool pwr_has_battery();
 
 void pwr_start();
 void pwr_task(void * params);

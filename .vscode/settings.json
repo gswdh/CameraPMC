@@ -1,16 +1,17 @@
 {
-    "files.associations": {
-        "stdbool.h": "c",
-        "usart.h": "c",
-        "stusb4500.h": "c",
-        "logging.h": "c",
-        "type_traits": "c",
-        "usbpd.h": "c"
-    },
-    // The number of spaces a tab is equal to.
-    "editor.tabSize": 4,
-    // Insert spaces when pressing Tab.
-    "editor.insertSpaces": false,
-    // When opening a file, `editor.tabSize` and `editor.insertSpaces` will be detected based on the file contents.
-    "editor.detectIndentation": false
+	"files.associations": {
+		"stdbool.h": "c",
+		"usart.h": "c",
+		"stusb4500.h": "c",
+		"logging.h": "c",
+		"type_traits": "c",
+		"usbpd.h": "c",
+		"main.h": "c"
+	},
+	// The number of spaces a tab is equal to.
+	"editor.tabSize": 4,
+	// Insert spaces when pressing Tab.
+	"editor.insertSpaces": false,
+	// When opening a file, `editor.tabSize` and `editor.insertSpaces` will be detected based on the file contents.
+	"editor.detectIndentation": false
 }
