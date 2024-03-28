@@ -46,7 +46,7 @@ void program_entry()
 
 	// Activity status
 	xTaskCreate(blink_task, "Blink", 1024, NULL, tskIDLE_PRIORITY, NULL);
-	//xTaskCreate(button_task, "Button", 1024, NULL, tskIDLE_PRIORITY, NULL);
+	xTaskCreate(button_task, "Button", 1024, NULL, tskIDLE_PRIORITY, NULL);
 }
 
 void sys_delay(uint32_t t_delay_ms)
@@ -81,7 +81,7 @@ void button_task(void *params)
 			tick = sys_get_tick();
 
 			// Stay in the loop while the button is held
-			while (HAL_GPIO_ReadPin(SYS_WAKE_GPIO_Port, SYS_WAKE_Pin))
+			while (HAL_GPIO_ReadPin(BTN_THUMB_GPIO_Port, BTN_THUMB_Pin))
 			{
 				// If it's held longer than 2s
 				if (sys_get_tick() > tick + 2000)
@@ -90,7 +90,7 @@ void button_task(void *params)
 					HAL_GPIO_WritePin(PMC_LED_STATUS_GPIO_Port, PMC_LED_STATUS_Pin, 1);
 
 					// Wait for the button to be released
-					while (HAL_GPIO_ReadPin(SYS_WAKE_GPIO_Port, SYS_WAKE_Pin))
+					while (HAL_GPIO_ReadPin(BTN_THUMB_GPIO_Port, BTN_THUMB_Pin))
 					{
 						sys_delay(10);
 					}
