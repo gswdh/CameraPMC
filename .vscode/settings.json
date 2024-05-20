@@ -6,7 +6,8 @@
 		"logging.h": "c",
 		"type_traits": "c",
 		"usbpd.h": "c",
-		"main.h": "c"
+		"main.h": "c",
+		"messages.h": "c"
 	},
 	// The number of spaces a tab is equal to.
 	"editor.tabSize": 4,

@@ -7,6 +7,7 @@
 
 #include "power.h"
 #include "logging.h"
+#include "pss_comms.h"
 
 #include "gpio.h"
 
@@ -26,6 +27,9 @@ void program_entry()
 
 	// Power the system up
 	pwr_sys_on();
+
+	// Start comms system with the PSS
+	pss_comms_start();
 
 	// Get the wake up source
 	pwr_wake_source_t wake_source = pwr_get_wake_source();
@@ -94,6 +98,8 @@ void button_task(void *params)
 					{
 						sys_delay(10);
 					}
+
+					log_info(LOG_TAG, "Turning system off, goodbye!\n");
 
 					// Turn the system off
 					pwr_sys_off();

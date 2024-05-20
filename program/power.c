@@ -11,9 +11,13 @@
 #include "charger.h"
 #include "stusb4500.h"
 
+#include "cpubsub.h"
+#include "messages.h"
+
 #define LOG_TAG "PWR"
 
-uint16_t pwr_measure_results[2] = {0};
+static uint16_t pwr_measure_results[2] = {0};
+static MSGBatteryStats_t bat_stats_msg = {0};
 
 act_error act_write_regs(uint8_t addr, uint8_t *data, uint8_t len)
 {
@@ -193,6 +197,13 @@ void chrg_task(void *params)
 			log_set_bar("Battery Current", results.i_bat_amps);
 			log_set_bar("Charger Current", results.i_in_amps);
 
+			/* Publish the data */
+			bat_stats_msg.mid = MSGBatteryStats_MID;
+			bat_stats_msg.voltage = results.v_adc_volts;
+			bat_stats_msg.current = results.i_bat_amps;
+			bat_stats_msg.soc = 0;
+			cps_publish(&bat_stats_msg);
+
 			// Check to see if the USB has been plugged in or out
 			if (usb_attached_n != stusb_get_attach())
 			{
@@ -210,10 +221,9 @@ void chrg_task(void *params)
 				else
 				{
 					// Check if there's a pack attached
-					if(!pwr_has_battery())
+					if (!pwr_has_battery())
 					{
 						log_info(LOG_TAG, "No battery pack detected, will not attempt to charge.\n");
-
 					}
 
 					else

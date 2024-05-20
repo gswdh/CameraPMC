@@ -85,6 +85,8 @@ program/power.c \
 program/usbpd.c \
 program/logging.c \
 program/program.c \
+program/pss_comms.c \
+program/pipe_interface_freertos.c \
 \
 gsembedlib/stusb4500/stusb4500.c \
 gsembedlib/log/log.c \
@@ -93,7 +95,11 @@ gsembedlib/act2861/charger.c \
 \
 cJSON/cJSON.c \
 \
+base64/base64.c \
+\
 stusb4500_nvm/USBPD_CUST_NVM_API.c \
+\
+CameraMessages/cpubsub/cpubsub.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -166,6 +172,9 @@ C_INCLUDES =  \
 -Igsembedlib/act2861 \
 -IcJSON \
 -Istusb4500_nvm \
+-Ibase64 \
+-ICameraMessages/cpubsub \
+-ICameraMessages \
 
 
 # compile gcc flags
