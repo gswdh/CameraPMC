@@ -37,6 +37,14 @@ static uint32_t pss_comms_encode_data(uint8_t *data, uint32_t len, char *encoded
 	return encoded_data_len;
 }
 
+static void pss_comms_send(uint8_t *data, uint32_t data_len)
+{
+	char *encoded_data = NULL;
+	uint32_t len = pss_comms_encode_data(data, data_len, encoded_data);
+	HAL_UART_Transmit(&huart2, (uint8_t *)encoded_data, (uint16_t)len, 1000);
+	free(encoded_data);
+}
+
 void pss_comms_task()
 {
 	uint8_t data[DATA_LEN] = {0};
@@ -46,14 +54,23 @@ void pss_comms_task()
 		/* Wait for some data to arrive */
 		cps_receive(&pipe, data, PIPE_WAIT_BLOCK);
 
-		topic_t mid = cps_get_mid(data);
+		uint32_t packet_len = 0;
 
-		if (mid == MSGBatteryStats_MID)
+		/* Get the packet len from the MID */
+		switch (cps_get_mid(data))
 		{
-			char *encoded_data = NULL;
-			uint32_t len = pss_comms_encode_data(data, MSGBatteryStats_LEN, encoded_data);
-			HAL_UART_Transmit(&huart2, (uint8_t *)encoded_data, (uint16_t)len, 1000);
-			free(encoded_data);
+		case MSGBatteryStats_MID:
+			packet_len = MSGBatteryStats_LEN;
+			break;
+		default:
+			packet_len = 0;
+			break;
+		}
+
+		/* If it was an MID we want to send, do so */
+		if (packet_len)
+		{
+			pss_comms_send(data, packet_len);
 		}
 	}
 
