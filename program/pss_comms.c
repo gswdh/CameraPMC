@@ -3,29 +3,30 @@
 #include "cmsis_os.h"
 
 #include "logging.h"
-#include "base64.h"
 #include "program.h"
 
 #include "cpubsub.h"
 #include "messages.h"
+#include "base64.h"
 
 #include "usart.h"
 
-#include <stdlib.h>
 #include <assert.h>
-
-static pipe_t pipe = {0};
 
 #define LOG_TAG "PSS_COMMS"
 
-#define DATA_LEN (64)
+#define RAW_DATA_LEN (64)
+#define ENC_DATA_LEN (RAW_DATA_LEN * 4)
 
-static char encoded_data[256] = {0};
+static pipe_t pipe = {0};
 
-static uint32_t pss_comms_encode_data(uint8_t *data, uint32_t len)
+static uint32_t pss_comms_encode_data(uint8_t *data, uint32_t len, char *encoded_data, uint32_t encoded_data_max_len)
 {
 	/* Calc the encoded data length */
 	uint32_t encoded_data_len = BASE64_ENCODE_OUT_SIZE(len);
+
+	/* Check if we fit */
+	assert(encoded_data_len < encoded_data_max_len);
 
 	/* Encode and add a terminator */
 	base64_encode(data, len, encoded_data);
@@ -36,13 +37,14 @@ static uint32_t pss_comms_encode_data(uint8_t *data, uint32_t len)
 
 static void pss_comms_send(uint8_t *data, uint32_t data_len)
 {
-	uint32_t len = pss_comms_encode_data(data, data_len);
-	HAL_UART_Transmit(&huart2, (uint8_t *)encoded_data, (uint16_t)len, 1000);
+	static char encoded_data[ENC_DATA_LEN] = {0};
+	uint32_t len = pss_comms_encode_data(data, data_len, encoded_data, ENC_DATA_LEN);
+	HAL_UART_Transmit(&huart2, (uint8_t *)encoded_data, (uint16_t)len, 10);
 }
 
 void pss_comms_task()
 {
-	uint8_t data[DATA_LEN] = {0};
+	uint8_t data[RAW_DATA_LEN] = {0};
 
 	while (true)
 	{
