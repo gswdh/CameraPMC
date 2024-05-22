@@ -20,29 +20,24 @@ static pipe_t pipe = {0};
 
 #define DATA_LEN (64)
 
-static uint32_t pss_comms_encode_data(uint8_t *data, uint32_t len, char *encoded_data)
+static char encoded_data[256] = {0};
+
+static uint32_t pss_comms_encode_data(uint8_t *data, uint32_t len)
 {
 	/* Calc the encoded data length */
 	uint32_t encoded_data_len = BASE64_ENCODE_OUT_SIZE(len);
 
-	/* Provision some memory */
-	encoded_data = malloc(encoded_data_len + 1);
-	assert(encoded_data != NULL);
-
 	/* Encode and add a terminator */
 	base64_encode(data, len, encoded_data);
-	encoded_data[encoded_data_len] = '\n';
 
 	/* Return the length for TX */
-	return encoded_data_len;
+	return encoded_data_len + 1;
 }
 
 static void pss_comms_send(uint8_t *data, uint32_t data_len)
 {
-	char *encoded_data = NULL;
-	uint32_t len = pss_comms_encode_data(data, data_len, encoded_data);
+	uint32_t len = pss_comms_encode_data(data, data_len);
 	HAL_UART_Transmit(&huart2, (uint8_t *)encoded_data, (uint16_t)len, 1000);
-	free(encoded_data);
 }
 
 void pss_comms_task()
