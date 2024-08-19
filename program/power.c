@@ -14,10 +14,15 @@
 #include "cpubsub.h"
 #include "messages.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+#include "timers.h"
+
 #define LOG_TAG "PWR"
 
 static uint16_t pwr_measure_results[2] = {0};
 static MSGBatteryStats_t bat_stats_msg = {0};
+static bool usb_attached = false;
 
 act_error act_write_regs(uint8_t addr, uint8_t *data, uint8_t len)
 {
@@ -145,105 +150,79 @@ bool pwr_has_battery()
 	return !HAL_GPIO_ReadPin(BMS_NPRESENT_GPIO_Port, BMS_NPRESENT_Pin);
 }
 
+static void pwr_tick(TimerHandle_t timer)
+{
+	float v = pwr_measure_voltage_V();
+	float a = pwr_measure_current_A();
+	float w = pwr_measure_power_W();
+}
+
+static void chg_tick(TimerHandle_t timer)
+{
+	CHRG_ADCResults results = {0};
+	CHRG_GetADCResults(&results);
+
+	/* Publish the data */
+	bat_stats_msg.mid = MSGBatteryStats_MID;
+	bat_stats_msg.voltage = results.v_adc_volts;
+	bat_stats_msg.current = results.i_bat_amps;
+	bat_stats_msg.soc = 0;
+	cps_publish(&bat_stats_msg);
+
+	// Check to see if the USB has been plugged in or out
+	if (usb_attached == stusb_get_attach())
+	{
+		// Nothing has changed
+		return;
+	}
+
+	// Update the current status
+	usb_attached = stusb_get_attach();
+
+	// If not attached, put charger into idle
+	if (usb_attached == false)
+	{
+		CHRG_EnterHiZ();
+		log_info(LOG_TAG, "USB has been detached, stopped charging.\n");
+		return;
+	}
+
+	// As we're attached, attempt to start charging
+	log_info(LOG_TAG, "A USB power source has been connected.\n");
+
+	// Check if there's a pack attached
+	if (pwr_has_battery() == false)
+	{
+		log_info(LOG_TAG, "No battery pack detected, will not attempt to charge.\n");
+		return;
+	}
+
+	pdo_t pdo = stusb_read_pdo_selected();
+	log_info(LOG_TAG, "PDO voltage = %2.3f, current = %2.3f.\n", pdo.voltage, pdo.current);
+	act_error error = CHRG_EnableCharging(5, pdo.current);
+	if (error == ACT_OK)
+	{
+		log_info(LOG_TAG, "USB has been attached. Started charging with a %2.3fA input current limit.\n", pdo.current);
+	}
+
+	else
+	{
+		log_info(LOG_TAG, "USB has been attached. Start charging failed with code = %u. Moving to idle.\n", error);
+		CHRG_EnterHiZ();
+	}
+}
+
 void pwr_start()
 {
 	usbpd_start();
 
 	pwr_measure_start();
 
-	xTaskCreate(pwr_task, "Power", 1024, NULL, tskIDLE_PRIORITY, NULL);
-	xTaskCreate(chrg_task, "Charger", 1024, NULL, tskIDLE_PRIORITY, NULL);
-}
-
-void pwr_task(void *params)
-{
-	uint32_t tick = sys_get_tick();
-
-	while (1)
-	{
-		if (sys_get_tick() > (tick + 1000))
-		{
-			tick = sys_get_tick();
-
-			float v = pwr_measure_voltage_V();
-			float a = pwr_measure_current_A();
-			float w = pwr_measure_power_W();
-
-			log_set_bar("System Voltage", v);
-			log_set_bar("System Current", a);
-			log_set_bar("System Power", w);
-		}
-	}
-}
-
-void chrg_task(void *params)
-{
-	bool usb_attached_n = true;
-
 	CHRG_EnterHiZ();
 
-	uint32_t tick = sys_get_tick();
+	TimerHandle_t pwr_timer = xTimerCreate("Power Tick", pdMS_TO_TICKS(1000), true, NULL, pwr_tick);
+	xTimerStart(pwr_timer, 0);
 
-	while (1)
-	{
-		if (sys_get_tick() > (tick + 1000))
-		{
-			tick = sys_get_tick();
-
-			CHRG_ADCResults results = {0};
-			CHRG_GetADCResults(&results);
-
-			log_set_bar("Battery Voltage", results.v_bat_volts);
-			log_set_bar("Battery Current", results.i_bat_amps);
-			log_set_bar("Charger Current", results.i_in_amps);
-
-			/* Publish the data */
-			bat_stats_msg.mid = MSGBatteryStats_MID;
-			bat_stats_msg.voltage = results.v_adc_volts;
-			bat_stats_msg.current = results.i_bat_amps;
-			bat_stats_msg.soc = 0;
-			cps_publish(&bat_stats_msg);
-
-			// Check to see if the USB has been plugged in or out
-			if (usb_attached_n != stusb_get_attach())
-			{
-				// Update the current status
-				usb_attached_n = stusb_get_attach();
-
-				// If not attached, put charger into idle
-				if (usb_attached_n)
-				{
-					CHRG_EnterHiZ();
-					log_info(LOG_TAG, "USB has been detached, stopped charging.\n");
-				}
-
-				// If attached, attempt to start charging
-				else
-				{
-					// Check if there's a pack attached
-					if (!pwr_has_battery())
-					{
-						log_info(LOG_TAG, "No battery pack detected, will not attempt to charge.\n");
-					}
-
-					else
-					{
-						pdo_t pdo = stusb_read_pdo_selected();
-						log_info(LOG_TAG, "PDO voltage = %2.3f, current = %2.3f.\n", pdo.voltage, pdo.current);
-						act_error error = CHRG_EnableCharging(5, pdo.current);
-						if (error == ACT_OK)
-						{
-							log_info(LOG_TAG, "USB has been attached. Started charging with a %2.3fA input current limit.\n", pdo.current);
-						}
-
-						else
-						{
-							log_info(LOG_TAG, "USB has been attached. Start charging failed with code = %u. Moving to idle.\n", error);
-							CHRG_EnterHiZ();
-						}
-					}
-				}
-			}
-		}
-	}
+	TimerHandle_t chg_timer = xTimerCreate("Charger Tick", pdMS_TO_TICKS(1000), true, NULL, chg_tick);
+	xTimerStart(chg_timer, 0);
 }

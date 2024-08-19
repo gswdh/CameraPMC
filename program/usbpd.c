@@ -28,7 +28,7 @@ void stusb_set_reset(bool en)
 
 bool stusb_get_attach()
 {
-	return HAL_GPIO_ReadPin(STUSB_ATTACH_GPIO_Port, STUSB_ATTACH_Pin);
+	return !HAL_GPIO_ReadPin(STUSB_ATTACH_GPIO_Port, STUSB_ATTACH_Pin);
 }
 
 bool stusb_get_nint()

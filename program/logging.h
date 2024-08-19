@@ -3,8 +3,6 @@
 
 #include "log.h"
 
-#define LOG_BUFFER_LEN (1024)
-
-void log_start();
+void log_start(void);
 
 #endif

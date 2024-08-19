@@ -88,10 +88,10 @@ program/program.c \
 program/pss_comms.c \
 program/pipe_interface_freertos.c \
 \
-gsembedlib/stusb4500/stusb4500.c \
-gsembedlib/log/log.c \
-gsembedlib/act2861/act2861.c \
-gsembedlib/act2861/charger.c \
+embedlib/stusb4500/stusb4500.c \
+embedlib/log/log.c \
+embedlib/act2861/act2861.c \
+embedlib/act2861/charger.c \
 \
 cJSON/cJSON.c \
 \
@@ -167,9 +167,9 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Device/ST/STM32L4xx/Include \
 -IDrivers/CMSIS/Include \
 -Iprogram \
--Igsembedlib/stusb4500 \
--Igsembedlib/log \
--Igsembedlib/act2861 \
+-Iembedlib/stusb4500 \
+-Iembedlib/log \
+-Iembedlib/act2861 \
 -IcJSON \
 -Istusb4500_nvm \
 -Ibase64 \

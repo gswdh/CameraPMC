@@ -7,7 +7,12 @@
 		"type_traits": "c",
 		"usbpd.h": "c",
 		"main.h": "c",
-		"messages.h": "c"
+		"messages.h": "c",
+		"cmsis_os.h": "c",
+		"freertos.h": "c",
+		"task.h": "c",
+		"string.h": "c",
+		"unistd.h": "c"
 	},
 	// The number of spaces a tab is equal to.
 	"editor.tabSize": 4,
