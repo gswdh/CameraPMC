@@ -18,8 +18,10 @@ def clean(ctx):
 
 
 @task
-def program(ctx):
+def program(ctx, mon=False):
     ctx.run("JLinkExe program.jlink")
+    if mon:
+        monitor(ctx)
 
 
 @task

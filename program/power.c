@@ -20,7 +20,7 @@
 
 #define LOG_TAG "PWR"
 
-static uint16_t pwr_measure_results[2] = {0};
+static uint16_t pwr_measure_results[3] = {0};
 static MSGBatteryStats_t bat_stats_msg = {0};
 static bool usb_attached = false;
 
@@ -53,7 +53,7 @@ uint32_t act_get_tick_ms()
 
 void pwr_measure_start()
 {
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)pwr_measure_results, 2);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)pwr_measure_results, 3);
 }
 
 float pwr_measure_voltage_V()
@@ -69,6 +69,11 @@ float pwr_measure_current_A()
 float pwr_measure_power_W()
 {
 	return pwr_measure_current_A() * pwr_measure_voltage_V();
+}
+
+float pwr_measure_power_T()
+{
+	return __HAL_ADC_CALC_TEMPERATURE(1800, pwr_measure_results[2], ADC_RESOLUTION_12B);
 }
 
 void pwr_sys_on()
@@ -155,6 +160,12 @@ static void pwr_tick(TimerHandle_t timer)
 	float v = pwr_measure_voltage_V();
 	float a = pwr_measure_current_A();
 	float w = pwr_measure_power_W();
+	float t = pwr_measure_power_T();
+
+	log_info(LOG_TAG, "System voltage = %2.3fV\n", v);
+	log_info(LOG_TAG, "System current = %2.3fA\n", a);
+	log_info(LOG_TAG, "Power consumption = %2.3fW\n", w);
+	log_info(LOG_TAG, "Temperature = %2.3fC\n", t);
 }
 
 static void chg_tick(TimerHandle_t timer)

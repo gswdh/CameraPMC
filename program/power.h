@@ -5,13 +5,19 @@
 
 #include <stdbool.h>
 
-typedef enum {PWR_WAKE_UNKNOWN, PWR_WAKE_BUTTON, PWR_WAKE_USB} pwr_wake_source_t;
+typedef enum
+{
+	PWR_WAKE_UNKNOWN,
+	PWR_WAKE_BUTTON,
+	PWR_WAKE_USB
+} pwr_wake_source_t;
 
 void pwr_measure_start();
 float pwr_measure_voltage_V();
 float pwr_measure_current_A();
 float pwr_measure_power_W();
- 
+float pwr_measure_power_T();
+
 void pwr_sys_on();
 void pwr_sys_off();
 void pwr_sleep();
@@ -22,7 +28,7 @@ void pwr_stop_charging();
 bool pwr_has_battery();
 
 void pwr_start();
-void pwr_task(void * params);
-void chrg_task(void * params);
+void pwr_task(void *params);
+void chrg_task(void *params);
 
 #endif
