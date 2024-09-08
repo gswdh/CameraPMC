@@ -2,10 +2,11 @@
 
 #include "cmsis_os.h"
 #include "i2c.h"
+#include "sys_tick.h"
 
 #include "stusb4500.h"
 #include "logging.h"
-#include "program.h"
+#include "system.h"
 
 #include "USB_PD_defines.h"
 
@@ -48,7 +49,7 @@ bool stusb_get_pok3()
 
 void stusb_delay_ms(uint32_t time_ms)
 {
-	sys_delay(time_ms);
+	SYS_DLY_MS(time_ms);
 }
 
 void usbpd_start()

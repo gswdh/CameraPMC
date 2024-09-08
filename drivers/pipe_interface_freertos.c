@@ -2,7 +2,8 @@
 
 #include <stdlib.h>
 
-#include "cmsis_os.h"
+#include "FreeRTOS.h"
+#include "queue.h"
 
 void pipe_init(pipe_t *pipe, uint32_t obj_size, uint32_t queue_len)
 {

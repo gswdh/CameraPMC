@@ -1,6 +1,6 @@
 #include "power.h"
 
-#include "program.h"
+#include "system.h"
 #include "gpio.h"
 #include "i2c.h"
 #include "adc.h"
@@ -225,15 +225,24 @@ static void chg_tick(TimerHandle_t timer)
 
 void pwr_start()
 {
+	// Default non charging state for the charger
+	CHRG_EnterHiZ();
+
+	// Init the USB PD
 	usbpd_start();
 
+	// Start the ADC for power measurement stats
 	pwr_measure_start();
 
-	CHRG_EnterHiZ();
+	// Power the system up
+	pwr_sys_on();
 
 	TimerHandle_t pwr_timer = xTimerCreate("Power Tick", pdMS_TO_TICKS(1000), true, NULL, pwr_tick);
 	xTimerStart(pwr_timer, 0);
 
 	TimerHandle_t chg_timer = xTimerCreate("Charger Tick", pdMS_TO_TICKS(1000), true, NULL, chg_tick);
 	xTimerStart(chg_timer, 0);
+
+	// Fall off the end
+	vTaskDelete(NULL);
 }

@@ -36,70 +36,69 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
-setup/main.c \
-setup/gpio.c \
-setup/adc.c \
-setup/dma.c \
-setup/i2c.c \
-setup/rng.c \
-setup/tim.c \
-setup/usart.c \
-setup/stm32l4xx_it.c \
-setup/stm32l4xx_hal_msp.c \
-setup/stm32l4xx_hal_timebase_tim.c \
-setup/system_stm32l4xx.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_adc.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_adc_ex.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma_ex.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rng.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c \
-Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.c \
-Middlewares/Third_Party/FreeRTOS/Source/croutine.c \
-Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
-Middlewares/Third_Party/FreeRTOS/Source/list.c \
-Middlewares/Third_Party/FreeRTOS/Source/queue.c \
-Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c \
-Middlewares/Third_Party/FreeRTOS/Source/tasks.c \
-Middlewares/Third_Party/FreeRTOS/Source/timers.c \
-Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
-Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
-Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
+main.c \
+drivers/gpio.c \
+drivers/adc.c \
+drivers/dma.c \
+drivers/i2c.c \
+drivers/rng.c \
+drivers/tim.c \
+drivers/usart.c \
+drivers/stm32l4xx_it.c \
+drivers/stm32l4xx_hal_msp.c \
+drivers/stm32l4xx_hal_timebase_tim.c \
+drivers/system_stm32l4xx.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_adc.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_adc_ex.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma_ex.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rng.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c \
+libs/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.c \
+libs/Middlewares/Third_Party/FreeRTOS/Source/croutine.c \
+libs/Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
+libs/Middlewares/Third_Party/FreeRTOS/Source/list.c \
+libs/Middlewares/Third_Party/FreeRTOS/Source/queue.c \
+libs/Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c \
+libs/Middlewares/Third_Party/FreeRTOS/Source/tasks.c \
+libs/Middlewares/Third_Party/FreeRTOS/Source/timers.c \
+libs/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
+libs/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
+libs/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
 \
-program/power.c \
-program/usbpd.c \
-program/logging.c \
-program/program.c \
-program/pss_comms.c \
-program/pipe_interface_freertos.c \
+apps/apps.c \
+apps/power/power.c \
+apps/system/system.c \
+apps/system/button.c \
+apps/system/blink.c \
 \
-embedlib/stusb4500/stusb4500.c \
-embedlib/log/log.c \
-embedlib/act2861/act2861.c \
-embedlib/act2861/charger.c \
+drivers/usbpd.c \
+drivers/logging.c \
+drivers/pipe_interface_freertos.c \
 \
-cJSON/cJSON.c \
+submodules/embedlib/stusb4500/stusb4500.c \
+submodules/embedlib/log/log.c \
+submodules/embedlib/act2861/act2861.c \
+submodules/embedlib/act2861/charger.c \
 \
-base64/base64.c \
+libs/stusb4500_nvm/USBPD_CUST_NVM_API.c \
 \
-stusb4500_nvm/USBPD_CUST_NVM_API.c \
-\
-CameraMessages/cpubsub/cpubsub.c
+submodules/CameraMessages/cpubsub/cpubsub.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -154,27 +153,30 @@ C_DEFS =  \
 
 # AS includes
 AS_INCLUDES =  \
--Isetup
+-Idrivers
 
 # C includes
 C_INCLUDES =  \
--Isetup \
--IDrivers/STM32L4xx_HAL_Driver/Inc \
--IDrivers/STM32L4xx_HAL_Driver/Inc/Legacy \
--IMiddlewares/Third_Party/FreeRTOS/Source/include \
--IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
--IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
--IDrivers/CMSIS/Device/ST/STM32L4xx/Include \
--IDrivers/CMSIS/Include \
--Iprogram \
--Iembedlib/stusb4500 \
--Iembedlib/log \
--Iembedlib/act2861 \
--IcJSON \
--Istusb4500_nvm \
--Ibase64 \
--ICameraMessages/cpubsub \
--ICameraMessages \
+-Idrivers \
+\
+-Ilibs/Drivers/STM32L4xx_HAL_Driver/Inc \
+-Ilibs/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy \
+-Ilibs/Middlewares/Third_Party/FreeRTOS/Source/include \
+-Ilibs/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
+-Ilibs/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
+-Ilibs/Drivers/CMSIS/Device/ST/STM32L4xx/Include \
+-Ilibs/Drivers/CMSIS/Include \
+-Ilibs/stusb4500_nvm \
+\
+-Isubmodules/embedlib/stusb4500 \
+-Isubmodules/embedlib/log \
+-Isubmodules/embedlib/act2861 \
+-Isubmodules/CameraMessages/cpubsub \
+-Isubmodules/CameraMessages \
+\
+-Iapps \
+-Iapps/system \
+-Iapps/power \
 
 
 # compile gcc flags
