@@ -5,6 +5,7 @@
 
 #include "power.h"
 #include "logging.h"
+#include "seven_seg.h"
 
 #include "FreeRTOS.h"
 #include "timers.h"
@@ -51,6 +52,9 @@ void button_task(TimerHandle_t xTimer)
 		{
 			SYS_DLY_MS(10);
 		}
+
+		// Turn the SS off
+		ss_set_segments(0x00);
 
 		// Sleep the system
 		pwr_sleep();

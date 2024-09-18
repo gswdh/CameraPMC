@@ -9,8 +9,11 @@ typedef enum
 {
 	PWR_WAKE_UNKNOWN,
 	PWR_WAKE_BUTTON,
-	PWR_WAKE_USB
+	PWR_WAKE_USB,
+	PWR_WAKE_BMS,
 } pwr_wake_source_t;
+
+#define PWR_MAX_CHARGE_CURRENT_A (3.5f)
 
 void pwr_measure_start();
 float pwr_measure_voltage_V();
@@ -23,12 +26,13 @@ void pwr_sys_off();
 void pwr_sleep();
 pwr_wake_source_t pwr_get_wake_source();
 
-void pwr_start_charging(float max_input_current);
-void pwr_stop_charging();
 bool pwr_has_battery();
 
 void pwr_start();
 void pwr_task(void *params);
-void chrg_task(void *params);
+
+void pwr_chrg_start(void);
+void pwr_usbpd_start(void);
+void pwr_bms_start(void);
 
 #endif

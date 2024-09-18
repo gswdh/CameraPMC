@@ -15,7 +15,7 @@ void log_start(void)
 
 void log_transmit(const char *log)
 {
-	HAL_UART_Transmit(&huart1, (uint8_t *)log, strlen(log), 1000);
+	HAL_UART_Transmit(&huart1, (uint8_t *)log, strlen(log), 100);
 }
 
 uint32_t log_get_time()

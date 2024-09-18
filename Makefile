@@ -83,22 +83,37 @@ libs/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
 \
 apps/apps.c \
 apps/power/power.c \
+apps/power/bms_monitor.c \
+apps/power/charging.c \
+apps/power/usb_negotiation.c \
 apps/system/system.c \
 apps/system/button.c \
 apps/system/blink.c \
+apps/cps_network/net_pub.c \
+apps/debugging/debugging.c \
 \
 drivers/usbpd.c \
 drivers/logging.c \
 drivers/pipe_interface_freertos.c \
+drivers/cps_interface.c \
+drivers/seven_seg.c \
+drivers/bms_interface.c \
+drivers/act_interface.c \
+drivers/pwr_interface.c \
 \
 submodules/embedlib/stusb4500/stusb4500.c \
 submodules/embedlib/log/log.c \
 submodules/embedlib/act2861/act2861.c \
 submodules/embedlib/act2861/charger.c \
+submodules/embedlib/tca6408/tca6408.c \
+submodules/embedlib/max17320/max17320.c \
+submodules/CameraMessages/cpubsub/cpubsub.c \
+submodules/CameraMessages/cpubsub/pipe.c \
+submodules/CameraMessages/cpubsub/cpubsub_network.c \
+submodules/CameraMessages/cpubsub/base64/base64.c \
+submodules/CameraMessages/messages.c \
 \
 libs/stusb4500_nvm/USBPD_CUST_NVM_API.c \
-\
-submodules/CameraMessages/cpubsub/cpubsub.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -171,12 +186,17 @@ C_INCLUDES =  \
 -Isubmodules/embedlib/stusb4500 \
 -Isubmodules/embedlib/log \
 -Isubmodules/embedlib/act2861 \
+-Isubmodules/embedlib/tca6408 \
+-Isubmodules/embedlib/max17320 \
 -Isubmodules/CameraMessages/cpubsub \
+-Isubmodules/CameraMessages/cpubsub/base64 \
 -Isubmodules/CameraMessages \
 \
 -Iapps \
 -Iapps/system \
 -Iapps/power \
+-Iapps/cps_network \
+-Iapps/debugging 
 
 
 # compile gcc flags

@@ -19,7 +19,17 @@
 		"event_groups.h": "c",
 		"gpio.h": "c",
 		"timers.h": "c",
-		"apps.h": "c"
+		"apps.h": "c",
+		"net_pub.h": "c",
+		"random": "c",
+		"stdlib.h": "c",
+		"charger.h": "c",
+		"seven_seg.h": "c",
+		"stdio.h": "c",
+		"usb_pd_defines.h": "c",
+		"cpubsub.h": "c",
+		"i2c.h": "c",
+		"adc.h": "c"
 	},
 	// The number of spaces a tab is equal to.
 	"editor.tabSize": 4,

@@ -6,6 +6,9 @@
 // App headers
 #include "system.h"
 #include "power.h"
+#include "net_pub.h"
+#include "cpubsub_network.h"
+#include "debugging.h"
 
 // FreeRTOS
 #include "FreeRTOS.h"
@@ -32,6 +35,21 @@ static const app_config_t app_configs[] = {
 	{
 		.function = &pwr_start,
 		.name = "Power",
+		.stack_size = 256,
+	},
+	{
+		.function = &net_pub_task,
+		.name = "Network Publisher",
+		.stack_size = 512,
+	},
+	{
+		.function = &cps_network_task,
+		.name = "CPS Network",
+		.stack_size = 256,
+	},
+	{
+		.function = &dbg_start,
+		.name = "Debugging",
 		.stack_size = 256,
 	},
 };
