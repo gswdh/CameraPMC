@@ -1,5 +1,7 @@
 #include "power.h"
 
+#include "apps_config.h"
+
 #include "logging.h"
 #include "act2861.h"
 #include "charger.h"
@@ -17,6 +19,11 @@ static pipe_t pipe = {0};
 static MSGChargingStats_t charging_msg = {0};
 static MSGUSBPDStats_t usbpd_msg = {0};
 static bool usb_attached = false;
+
+bool pwr_is_charging()
+{
+	return (charging_msg.charging == 0U) ? false : true;
+}
 
 static void chg_stats_tick(TimerHandle_t timer)
 {
@@ -86,11 +93,12 @@ static void chg_tick(TimerHandle_t timer)
 
 void pwr_chrg_start(void)
 {
+	pipe_set_length(&pipe, CHRG_PIPE_LEN);
 	cps_subscribe(MSGUSBPDStats_MID, MSGUSBPDStats_LEN, &pipe);
 
-	TimerHandle_t chg_timer = xTimerCreate("Charger Tick", pdMS_TO_TICKS(1000), true, NULL, chg_tick);
+	TimerHandle_t chg_timer = xTimerCreate("Charger Tick", pdMS_TO_TICKS(CHRG_TICK_PERIOD_MS), true, NULL, chg_tick);
 	xTimerStart(chg_timer, 0);
 
-	TimerHandle_t chg_stats_timer = xTimerCreate("Charger Stats Tick", pdMS_TO_TICKS(1000), true, NULL, chg_stats_tick);
+	TimerHandle_t chg_stats_timer = xTimerCreate("Charger Stats Tick", pdMS_TO_TICKS(CHRG_STATS_TICK_PERIOD_MS), true, NULL, chg_stats_tick);
 	xTimerStart(chg_stats_timer, 0);
 }

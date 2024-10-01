@@ -1,5 +1,7 @@
 #include "debugging.h"
 
+#include "apps_config.h"
+
 #include "power.h"
 
 #include "system.h"
@@ -26,13 +28,15 @@
 
 #define LOG_TAG "DBG"
 
-const topic_t dbg_subs[] = {MSGBatteryStats_MID, MSGChargingStats_MID, MSGSystemStats_MID, MSGUSBPDStats_MID};
+#ifdef DEBUG
+const topic_t dbg_subs[] = {MSGBatteryStats_MID, MSGChargingStats_MID, MSGSystemStats_MID, MSGUSBPDStats_MID, MSGPowerButton_MID};
 
 static uint8_t *buffer = NULL;
 static pipe_t pipe = {0};
 
 static void dbg_tick(TimerHandle_t timer)
 {
+
 	while (cps_receive(&pipe, (void *)buffer, PIPE_WAIT_POLL) == CPS_OK)
 	{
 		topic_t mid = cps_get_mid((void *)buffer);
@@ -51,10 +55,13 @@ static void dbg_tick(TimerHandle_t timer)
 		// 	log_info(LOG_TAG, "\n");
 		// 	break;
 		case MSGBatteryStats_MID:
-			log_info(LOG_TAG, "BMS %2.3fV %2.3fA %u%% SoC\n",
+			log_info(LOG_TAG, "BMS %2.3fV %2.3fA SoC=%u%% cap=%2.3fAh STATUS=0x%04X FAULTS=0x%04X\n",
 					 ((MSGBatteryStats_t *)buffer)->voltage,
 					 ((MSGBatteryStats_t *)buffer)->current,
-					 (uint32_t)((MSGBatteryStats_t *)buffer)->soc);
+					 (uint32_t)((MSGBatteryStats_t *)buffer)->soc,
+					 ((MSGBatteryStats_t *)buffer)->capacity,
+					 ((MSGBatteryStats_t *)buffer)->status,
+					 ((MSGBatteryStats_t *)buffer)->faults);
 			break;
 		case MSGChargingStats_MID:
 			log_info(LOG_TAG, "CHRGR %2.3fVin %2.3fAin %2.3fVout %2.3fAout %2.3fC Charging = %5s\n",
@@ -78,15 +85,22 @@ static void dbg_tick(TimerHandle_t timer)
 					 ((MSGUSBPDStats_t *)buffer)->bus_current,
 					 (((MSGUSBPDStats_t *)buffer)->attached == 0) ? "false" : "true ");
 			break;
+		case MSGPowerButton_MID:
+			log_info(LOG_TAG, "PWRBTN %7s\n",
+					 (((MSGPowerButton_t *)buffer)->state == GPIO_FALLING) ? "falling" : "rising ");
+			break;
 		default:
 			log_warn(LOG_TAG, "MID %u not supported in the debugging.\n", mid);
 			break;
 		}
 	}
 }
+#endif
 
 void dbg_start(void *params)
 {
+#ifdef DEBUG
+	pipe_set_length(&pipe, DBG_PIPE_LEN);
 	for (uint32_t i = 0; i < (sizeof(dbg_subs) / sizeof(dbg_subs[0])); i++)
 	{
 		cps_subscribe(dbg_subs[i], messages_msg_len(dbg_subs[i]), &pipe);
@@ -101,9 +115,9 @@ void dbg_start(void *params)
 
 	else
 	{
-		TimerHandle_t dbg_timer = xTimerCreate("Debugging Tick", pdMS_TO_TICKS(100), true, NULL, dbg_tick);
+		TimerHandle_t dbg_timer = xTimerCreate("Debugging Tick", pdMS_TO_TICKS(DBG_TICK_PERIOD_MS), true, NULL, dbg_tick);
 		xTimerStart(dbg_timer, 0);
 	}
-
+#endif
 	vTaskDelete(NULL);
 }

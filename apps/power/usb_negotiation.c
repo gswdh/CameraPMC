@@ -1,5 +1,7 @@
 #include "power.h"
 
+#include "apps_config.h"
+
 #include "logging.h"
 #include "usbpd.h"
 #include "stusb4500.h"
@@ -51,6 +53,6 @@ static void usbpd_tick(TimerHandle_t timer)
 
 void pwr_usbpd_start(void)
 {
-	TimerHandle_t usbpd_timer = xTimerCreate("USBPD Tick", pdMS_TO_TICKS(1000), true, NULL, usbpd_tick);
+	TimerHandle_t usbpd_timer = xTimerCreate("USBPD Tick", pdMS_TO_TICKS(USBPD_TICK_PERIOD_MS), true, NULL, usbpd_tick);
 	xTimerStart(usbpd_timer, 0);
 }

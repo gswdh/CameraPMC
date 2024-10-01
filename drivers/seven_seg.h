@@ -12,3 +12,4 @@
 #define SS_SEG_P (0x01 << 7)
 
 void ss_set_segments(uint8_t segments);
+void ss_set_number(uint8_t n);

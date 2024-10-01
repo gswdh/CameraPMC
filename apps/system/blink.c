@@ -1,13 +1,13 @@
 #include "system.h"
 
-#include "gpio.h"
+#include "apps_config.h"
 
-// Drivers
 #include "pipe.h"
 #include "cpubsub.h"
 #include "messages.h"
 #include "log.h"
 #include "seven_seg.h"
+#include "gpio.h"
 
 #include "FreeRTOS.h"
 #include "timers.h"
@@ -18,9 +18,7 @@
 #define LOG_TAG "BLINK"
 
 static pipe_t pipe = {0};
-
-static uint8_t segments_cntr = 0;
-const uint8_t segments_loop[6] = {SS_SEG_A, SS_SEG_B, SS_SEG_C, SS_SEG_D, SS_SEG_E, SS_SEG_F};
+static uint8_t *buffer = NULL;
 
 bool is_charging = false;
 
@@ -28,34 +26,36 @@ void blink_task(TimerHandle_t xTimer)
 {
 	HAL_GPIO_TogglePin(PMC_LED_RUN_GPIO_Port, PMC_LED_RUN_Pin);
 
-	// uint8_t *msg = (uint8_t *)malloc((size_t)pipe_item_size(&pipe));
-	// cps_result_t result = cps_receive(&pipe, (void *)msg, PIPE_WAIT_POLL);
-	// if (result == CPS_OK)
-	// {
-	// 	log_info(LOG_TAG, "Buttons = %08X\n", ((MSGButtonPress_t *)msg)->button_state);
-	// }
-	// free(msg);
-
-	if (is_charging == true)
+	cps_result_t result = cps_receive(&pipe, (void *)buffer, PIPE_WAIT_POLL);
+	if (result == CPS_OK)
 	{
-		ss_set_segments(segments_loop[segments_cntr++]);
-
-		if (segments_cntr == 6)
+		if (cps_get_mid((void *)buffer) == MSGChargingStats_MID)
 		{
-			segments_cntr = 0;
-		}
-	}
+			if (((MSGChargingStats_t *)buffer)->charging == 0)
+			{
+				ss_set_segments(SS_SEG_A | SS_SEG_B | SS_SEG_C | SS_SEG_D | SS_SEG_E | SS_SEG_F);
+			}
 
-	else
-	{
-		ss_set_segments(0x00);
+			else
+			{
+				ss_set_segments(SS_SEG_A | SS_SEG_D | SS_SEG_E | SS_SEG_F);
+			}
+		}
 	}
 }
 
 void blink_start(void)
 {
-	cps_subscribe(MSGButtonPress_MID, MSGButtonPress_LEN, &pipe);
+	pipe_set_length(&pipe, BNK_PIPE_LEN);
+	cps_subscribe(MSGChargingStats_MID, MSGChargingStats_LEN, &pipe);
 
-	xTimerHandle timer = xTimerCreate("Blink Timer", pdMS_TO_TICKS(50), true, NULL, blink_task);
+	buffer = (uint8_t *)malloc((size_t)pipe_item_size(&pipe));
+	if (buffer == NULL)
+	{
+		log_error(LOG_TAG, "malloc failed\n");
+		return;
+	}
+
+	xTimerHandle timer = xTimerCreate("Blink Timer", pdMS_TO_TICKS(BNK_TICK_PERIOD_MS), true, NULL, blink_task);
 	xTimerStart(timer, 0);
 }

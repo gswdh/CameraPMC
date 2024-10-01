@@ -4,6 +4,7 @@
 #include "i2c.h"
 #include "adc.h"
 #include "stusb4500.h"
+#include "seven_seg.h"
 
 #include "sys_tick.h"
 
@@ -13,6 +14,11 @@
 #include <stdint.h>
 
 static uint16_t pwr_measure_results[3] = {0};
+
+bool pwr_bms_nirq(void)
+{
+	return (bool)HAL_GPIO_ReadPin(BMS_NINT_GPIO_Port, BMS_NINT_Pin);
+}
 
 void pwr_measure_start()
 {
@@ -62,18 +68,21 @@ void pwr_sys_on()
 void pwr_sys_off()
 {
 	// FPGA and peripherals power down
-	HAL_GPIO_WritePin(PWR_DDR3_1V35_EN_GPIO_Port, PWR_DDR3_1V35_EN_Pin, 1);
-	HAL_GPIO_WritePin(PWR_SYS_3V3_EN_GPIO_Port, PWR_SYS_3V3_EN_Pin, 1);
+	HAL_GPIO_WritePin(PWR_DDR3_1V35_EN_GPIO_Port, PWR_DDR3_1V35_EN_Pin, 0);
+	HAL_GPIO_WritePin(PWR_SYS_3V3_EN_GPIO_Port, PWR_SYS_3V3_EN_Pin, 0);
 	SYS_DLY_MS(10);
-	HAL_GPIO_WritePin(PWR_DIG_1V8_EN_GPIO_Port, PWR_DIG_1V8_EN_Pin, 1);
+	HAL_GPIO_WritePin(PWR_DIG_1V8_EN_GPIO_Port, PWR_DIG_1V8_EN_Pin, 0);
 	SYS_DLY_MS(10);
-	HAL_GPIO_WritePin(PWR_FPGA_1V0_EN_GPIO_Port, PWR_FPGA_1V0_EN_Pin, 1);
-	HAL_GPIO_WritePin(PWR_ANA_1V8_EN_GPIO_Port, PWR_ANA_1V8_EN_Pin, 1);
+	HAL_GPIO_WritePin(PWR_FPGA_1V0_EN_GPIO_Port, PWR_FPGA_1V0_EN_Pin, 0);
+	HAL_GPIO_WritePin(PWR_ANA_1V8_EN_GPIO_Port, PWR_ANA_1V8_EN_Pin, 0);
 	SYS_DLY_MS(10);
 
 	// General system power (5V)
 	SYS_DLY_MS(50);
-	HAL_GPIO_WritePin(PWR_VBAT_EN_GPIO_Port, PWR_VBAT_EN_Pin, 1);
+	HAL_GPIO_WritePin(PWR_VBAT_EN_GPIO_Port, PWR_VBAT_EN_Pin, 10);
+
+	// Turn the seven segment off
+	ss_set_segments(0x00);
 }
 
 void pwr_sleep()
@@ -97,7 +106,7 @@ void pwr_sleep()
 
 pwr_wake_source_t pwr_get_wake_source()
 {
-	if (stusb_get_attach() == 0)
+	if (stusb_get_attach() == true)
 	{
 		return PWR_WAKE_USB;
 	}

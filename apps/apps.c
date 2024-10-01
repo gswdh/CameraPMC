@@ -45,7 +45,7 @@ static const app_config_t app_configs[] = {
 	{
 		.function = &cps_network_task,
 		.name = "CPS Network",
-		.stack_size = 256,
+		.stack_size = 384,
 	},
 	{
 		.function = &dbg_start,

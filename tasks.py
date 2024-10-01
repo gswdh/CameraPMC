@@ -13,6 +13,12 @@ def build(ctx, prog=False, mon=False):
 
 
 @task
+def build_release(ctx):
+    clean(ctx)
+    ctx.run("make DEBUG=0 -j16")
+
+
+@task
 def clean(ctx):
     ctx.run("make clean")
 
@@ -36,7 +42,7 @@ def monitor(ctx, port="", baud=921600):
     while True:
         data = ser.readline()
         if data:
-            print(data.decode(), end="", flush=True)
+            print(data.decode(errors="ignore"), end="", flush=True)
         time.sleep(0.01)
 
 

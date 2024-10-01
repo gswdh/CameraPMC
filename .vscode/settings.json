@@ -29,7 +29,10 @@
 		"usb_pd_defines.h": "c",
 		"cpubsub.h": "c",
 		"i2c.h": "c",
-		"adc.h": "c"
+		"adc.h": "c",
+		"cpubsub_network.h": "c",
+		"pipe.h": "c",
+		"sys_tick.h": "c"
 	},
 	// The number of spaces a tab is equal to.
 	"editor.tabSize": 4,

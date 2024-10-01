@@ -1,8 +1,11 @@
 #include "max17320.h"
 
 #include "i2c.h"
+#include "gpio.h"
 
 #include "logging.h"
+
+#include <stdbool.h>
 
 bms_error_t bms_reg_write(uint16_t reg, uint8_t *data, uint16_t len)
 {

@@ -206,12 +206,45 @@ CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction
 
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
+CFLAGS += -DDEBUG
 endif
 
+# Get the current Git commit hash (short format)
+GIT_HASH := $(shell git rev-parse --short HEAD)
+
+# Get the current Git commit date and time (escape spaces)
+GIT_COMMIT_TIME := $(shell git log -1 --format=%cd --date=format:'%Y-%m-%d %H:%M:%S' | sed 's/ /_/g')
+
+# Get the most recent Git tag, or commit hash if no tag exists (with -dirty if applicable)
+GIT_TAG := $(shell git describe --tags --always --dirty)
+
+# Get the current Git branch name
+GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+
+# Check if the working directory is dirty (has uncommitted changes)
+GIT_DIRTY := $(shell test -n "$$(git status --porcelain)" && echo "dirty" || echo "clean")
+
+# Get the username (author of the build)
+USER := $(shell whoami)
+
+# Get the hostname of the machine where the build is taking place
+HOSTNAME := $(shell hostname)
+
+# Get the current build date and time
+BUILD_TIME := $(shell date '+%Y-%m-%d_%H:%M:%S')
+
+# Add the Git information as defines to CFLAGS (escape double quotes properly)
+CFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"
+CFLAGS += -DGIT_COMMIT_TIME=\"$(GIT_COMMIT_TIME)\"
+CFLAGS += -DGIT_TAG=\"$(GIT_TAG)\"
+CFLAGS += -DGIT_BRANCH=\"$(GIT_BRANCH)\"
+CFLAGS += -DGIT_DIRTY=\"$(GIT_DIRTY)\"
+CFLAGS += -DUSER=\"$(USER)\"
+CFLAGS += -DHOSTNAME=\"$(HOSTNAME)\"
+CFLAGS += -DBUILD_TIME=\"$(BUILD_TIME)\"
 
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
-
 
 #######################################
 # LDFLAGS

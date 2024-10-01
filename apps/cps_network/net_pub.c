@@ -1,9 +1,12 @@
 #include "net_pub.h"
 
+#include "apps_config.h"
+
 #include "cpubsub_network.h"
 
 #include "log.h"
 #include "usart.h"
+#include "sys_tick.h"
 
 // FreeRTOS includes
 #include "FreeRTOS.h"
@@ -15,15 +18,15 @@
 
 #define LOG_TAG "NET_PUB"
 
-uint8_t buffer[NET_PUB_BUFF_LEN] = {0};
+static volatile uint8_t buffer[NET_PUB_BUFF_LEN] = {0};
 
 static void net_pub_init_rx(void)
 {
 	HAL_UART_DMAStop(&huart2);
 
-	memset(buffer, 0, NET_PUB_BUFF_LEN);
+	memset((char *)buffer, 0, NET_PUB_BUFF_LEN);
 
-	HAL_UART_Receive_DMA(&huart2, buffer, 13);
+	HAL_UART_Receive_DMA(&huart2, (uint8_t *)buffer, NET_PUB_BUFF_LEN);
 }
 
 void net_pub_task(void *params)
@@ -45,7 +48,7 @@ void net_pub_task(void *params)
 			net_pub_init_rx();
 		}
 
-		vTaskDelay(pdMS_TO_TICKS(10));
+		SYS_DLY_MS(10);
 	}
 
 	vTaskDelete(NULL);
