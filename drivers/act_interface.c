@@ -25,6 +25,7 @@ bool act_get_irq_pin()
 
 void act_delay_ms(uint32_t time_ms)
 {
+	vTaskDelay(pdMS_TO_TICKS(time_ms));
 }
 
 uint32_t act_get_tick_ms()

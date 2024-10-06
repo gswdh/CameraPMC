@@ -9,18 +9,18 @@
 
 // Power (general)
 #define PWR_PIPE_LEN (8)
-#define PWR_TICK_PERIOD_MS (1000)
+#define PWR_TICK_PERIOD_MS (100)
 
 // Power (charger)
 #define CHRG_PIPE_LEN (8)
-#define CHRG_TICK_PERIOD_MS (1000)
-#define CHRG_STATS_TICK_PERIOD_MS (1000)
+#define CHRG_TICK_PERIOD_MS (100)
+#define CHRG_STATS_TICK_PERIOD_MS (100)
 
 // Power (BMS)
-#define BMS_TICK_PERIOD_MS (1000)
+#define BMS_TICK_PERIOD_MS (100)
 
 // Power (USBPD)
-#define USBPD_TICK_PERIOD_MS (1000)
+#define USBPD_TICK_PERIOD_MS (100)
 
 // System (general)
 

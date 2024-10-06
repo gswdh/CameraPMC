@@ -19,6 +19,7 @@ static pipe_t pipe = {0};
 static MSGChargingStats_t charging_msg = {0};
 static MSGUSBPDStats_t usbpd_msg = {0};
 static bool usb_attached = false;
+static bool tick = false;
 
 bool pwr_is_charging()
 {
@@ -41,53 +42,68 @@ static void chg_stats_tick(TimerHandle_t timer)
 
 static void chg_tick(TimerHandle_t timer)
 {
-	// Check the charging status here now
-	act_error_t status = CHRG_VerifyCHGMode();
-	charging_msg.charging = (status == ACT_CHG_IN_PROGRESS) ? 1U : 0U;
+	tick = true;
+}
 
-	// Look for a USB PD message for any news
-	cps_result_t res = cps_receive(&pipe, (void *)&usbpd_msg, PIPE_WAIT_POLL);
-	if (res != CPS_OK)
+void pwr_chg_task(void *params)
+{
+	while (true)
 	{
-		// No message, give up here
-		return;
-	}
+		while (tick == false)
+		{
+			vTaskDelay(pdMS_TO_TICKS(10));
+		}
 
-	// Check to see if the USB has been plugged in or out
-	if (usb_attached == usbpd_msg.attached)
-	{
-		// Nothing has changed
-		return;
-	}
+		tick = false;
 
-	// Update the current status
-	usb_attached = usbpd_msg.attached;
+		// Check the charging status here now
+		act_error_t status = CHRG_VerifyCHGMode();
+		charging_msg.charging = (status == ACT_CHG_IN_PROGRESS) ? 1U : 0U;
 
-	// If not attached, put charger into idle
-	if (usb_attached == false)
-	{
-		CHRG_EnterHiZ();
-		log_info(LOG_TAG, "USB has been detached, stopped charging.\n");
-		return;
-	}
+		// Look for a USB PD message for any news
+		cps_result_t res = cps_receive(&pipe, (void *)&usbpd_msg, PIPE_WAIT_POLL);
+		if (res != CPS_OK)
+		{
+			// No message, give up here
+			continue;
+		}
 
-	// Check if there's a pack attached
-	if (pwr_has_battery() == false)
-	{
-		log_info(LOG_TAG, "No battery pack detected, will not attempt to charge.\n");
-		return;
-	}
+		// Check to see if the USB has been plugged in or out
+		if (usb_attached == usbpd_msg.attached)
+		{
+			// Nothing has changed
+			continue;
+		}
 
-	act_error_t error = CHRG_EnableCharging(PWR_MAX_CHARGE_CURRENT_A, usbpd_msg.bus_current);
-	if (error == ACT_OK)
-	{
-		log_info(LOG_TAG, "USB has been attached. Started charging with a %2.3fA input current limit.\n", usbpd_msg.bus_current);
-	}
+		// Update the current status
+		usb_attached = usbpd_msg.attached;
 
-	else
-	{
-		log_info(LOG_TAG, "USB has been attached. Start charging failed with code = %u. Moving to idle.\n", error);
-		CHRG_EnterHiZ();
+		// If not attached, put charger into idle
+		if (usb_attached == false)
+		{
+			CHRG_EnterHiZ();
+			log_info(LOG_TAG, "USB has been detached, stopped charging.\n");
+			continue;
+		}
+
+		// Check if there's a pack attached
+		if (pwr_has_battery() == false)
+		{
+			log_info(LOG_TAG, "No battery pack detected, will not attempt to charge.\n");
+			continue;
+		}
+
+		act_error_t error = CHRG_EnableCharging(PWR_MAX_CHARGE_CURRENT_A, usbpd_msg.bus_current);
+		if (error == ACT_OK)
+		{
+			log_info(LOG_TAG, "USB has been attached. Started charging with a %2.3fA input current limit.\n", usbpd_msg.bus_current);
+		}
+
+		else
+		{
+			log_info(LOG_TAG, "USB has been attached. Start charging failed with code = %u. Moving to idle.\n", error);
+			CHRG_EnterHiZ();
+		}
 	}
 }
 
@@ -101,4 +117,6 @@ void pwr_chrg_start(void)
 
 	TimerHandle_t chg_stats_timer = xTimerCreate("Charger Stats Tick", pdMS_TO_TICKS(CHRG_STATS_TICK_PERIOD_MS), true, NULL, chg_stats_tick);
 	xTimerStart(chg_stats_timer, 0);
+
+	xTaskCreate(pwr_chg_task, "Charger Task", 1024, NULL, tskIDLE_PRIORITY, NULL);
 }
