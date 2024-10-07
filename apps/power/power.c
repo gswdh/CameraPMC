@@ -28,22 +28,43 @@ static uint8_t *buffer = NULL;
 
 static bool charging = false;
 
-static char *pwr_state_str[] = {"unintialised", "off", "charging", "run"};
+static float pwr_power_avgs[PWR_POWER_AVG_LEN] = {0};
+static uint32_t pwr_power_avgs_cntr = 0;
+
+static float pwr_power_calc_avg(const float power)
+{
+	pwr_power_avgs[pwr_power_avgs_cntr++] = power;
+
+	if (pwr_power_avgs_cntr == PWR_POWER_AVG_LEN)
+	{
+		pwr_power_avgs_cntr = 0;
+	}
+
+	float mean = 0;
+
+	for (uint32_t i = 0; i < PWR_POWER_AVG_LEN; i++)
+	{
+		mean += pwr_power_avgs[i];
+	}
+
+	return mean / (float)PWR_POWER_AVG_LEN;
+}
+
 static char *pwr_get_state_str(pwr_state_t state)
 {
 	switch (state)
 	{
 	case PWR_STATE_OFF:
-		return pwr_state_str[1];
+		return "off";
 		break;
 	case PWR_STATE_UNINIT:
-		return pwr_state_str[0];
+		return "unintialised";
 		break;
 	case PWR_STATE_CHARGING:
-		return pwr_state_str[2];
+		return "charging";
 		break;
 	case PWR_STATE_RUN:
-		return pwr_state_str[3];
+		return "run";
 		break;
 	default:
 		return NULL;
@@ -176,7 +197,7 @@ static void pwr_tick(TimerHandle_t timer)
 	MSGSystemStats_t status = {0};
 	status.bus_voltage = pwr_measure_voltage_V();
 	status.bus_current = pwr_measure_current_A();
-	status.bus_power = status.bus_current * status.bus_voltage;
+	status.bus_power = pwr_power_calc_avg(status.bus_current * status.bus_voltage);
 	status.pmc_temp = pwr_measure_power_T();
 
 	cps_publish((void *)&status, MSGSystemStats_MID);

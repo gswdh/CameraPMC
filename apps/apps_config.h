@@ -20,7 +20,7 @@
 #define BMS_TICK_PERIOD_MS (100)
 
 // Power (USBPD)
-#define USBPD_TICK_PERIOD_MS (100)
+#define USBPD_TICK_PERIOD_MS (1000)
 
 // System (general)
 

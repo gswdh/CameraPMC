@@ -22,6 +22,8 @@ typedef enum
 
 #define PWR_MAX_CHARGE_CURRENT_A (3.5f)
 
+#define PWR_POWER_AVG_LEN (20)
+
 void pwr_measure_start();
 bool pwr_bms_nirq(void);
 float pwr_measure_voltage_V();

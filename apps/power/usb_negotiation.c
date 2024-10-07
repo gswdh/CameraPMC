@@ -35,13 +35,6 @@ void pwr_usbpd_task(void *params)
 
 		tick = false;
 
-		// Check to see if the USB has been plugged in or out
-		if (usb_attached == stusb_get_attach())
-		{
-			// Nothing has changed
-			continue;
-		}
-
 		// Update the current status
 		usb_attached = stusb_get_attach();
 
@@ -54,8 +47,6 @@ void pwr_usbpd_task(void *params)
 		// Has been attached, get the info
 		else
 		{
-			vTaskDelay(pdMS_TO_TICKS(1000));
-
 			pdo_t pdo = stusb_read_pdo_selected();
 			usbpd_msg.bus_voltage = pdo.voltage;
 			usbpd_msg.bus_current = pdo.current;
