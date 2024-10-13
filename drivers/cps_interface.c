@@ -5,23 +5,14 @@
 
 #include "usart.h"
 
-#include "FreeRTOS.h"
-#include "task.h"
-
-#include <stdbool.h>
-#include <stdio.h>
 #include <string.h>
+#include <stdio.h>
 
 void cps_network_transmit(uint8_t *data, uint32_t len)
 {
-	// Start code
-	const uint8_t start_code[] = "[";
-	HAL_UART_Transmit(&huart2, start_code, 1, 1000);
+	uint8_t payload[256] = {0};
+	sprintf((char *)payload, "[%s]", (char *)data);
 
 	// Send the payload
-	HAL_UART_Transmit(&huart2, data, (uint16_t)len, 100);
-
-	// End code
-	const uint8_t end_code[] = "]";
-	HAL_UART_Transmit(&huart2, end_code, 1, 1000);
+	HAL_UART_Transmit(&huart2, payload, (uint16_t)strlen((const char *)payload), 100);
 }
